@@ -6,6 +6,17 @@ class EmailChangesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
   end
 
+  test "the email-change screen stays reachable for every role" do
+    [ users(:one), users(:organizer), users(:admin) ].each do |actor|
+      sign_out
+      sign_in_as(actor)
+
+      get new_email_change_path
+
+      assert_response :success
+    end
+  end
+
   test "new renders the change form" do
     get new_email_change_path
 

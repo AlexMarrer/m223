@@ -6,6 +6,17 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
   end
 
+  test "the profile stays reachable for every role" do
+    [ users(:one), users(:organizer), users(:admin) ].each do |actor|
+      sign_out
+      sign_in_as(actor)
+
+      get profile_path
+
+      assert_response :success
+    end
+  end
+
   test "show renders name, email address and the role of the signed-in user" do
     get profile_path
 

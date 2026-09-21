@@ -2,6 +2,7 @@
 # reset link by mail.
 class PasswordsController < ApplicationController
   before_action :set_user
+  before_action :authorize_account
 
   def edit
   end
@@ -17,6 +18,10 @@ class PasswordsController < ApplicationController
   private
     def set_user
       @user = Current.user
+    end
+
+    def authorize_account
+      authorize @user, :own_account?
     end
 
     # password_challenge comes from has_secure_password and is validated against the stored

@@ -9,6 +9,17 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
   end
 
+  test "the password screen stays reachable for every role" do
+    [ users(:one), users(:organizer), users(:admin) ].each do |actor|
+      sign_out
+      sign_in_as(actor)
+
+      get edit_password_path
+
+      assert_response :success
+    end
+  end
+
   test "edit renders the change form" do
     get edit_password_path
 

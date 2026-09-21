@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
+  # Public sign-up: there is no signed-in user whose permissions could be checked.
+  skip_after_action :verify_authorized
 
   def new
     @user = User.new

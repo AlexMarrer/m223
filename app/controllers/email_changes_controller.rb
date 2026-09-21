@@ -1,5 +1,6 @@
 class EmailChangesController < ApplicationController
   before_action :set_user
+  before_action :authorize_account
 
   def new
   end
@@ -20,6 +21,10 @@ class EmailChangesController < ApplicationController
   private
     def set_user
       @user = Current.user
+    end
+
+    def authorize_account
+      authorize @user, :own_account?
     end
 
     def email_change_params

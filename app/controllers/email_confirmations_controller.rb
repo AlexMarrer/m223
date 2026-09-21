@@ -3,6 +3,8 @@
 # mail anywhere, including when an admin initiated the change.
 class EmailConfirmationsController < ApplicationController
   allow_unauthenticated_access only: :show
+  # The signed, expiring token authorizes this action on its own.
+  skip_after_action :verify_authorized
 
   def show
     user = User.find_by_token_for(:email_confirmation, params[:token])

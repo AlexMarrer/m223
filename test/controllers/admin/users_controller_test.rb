@@ -40,6 +40,18 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     get admin_users_path
 
     assert_redirected_to root_path
+    assert_equal I18n.t("authorization.denied"), flash[:alert]
+  end
+
+  test "the user-management link is shown to an admin and to nobody else" do
+    get root_path
+    assert_select "a[href=?]", admin_users_path
+
+    sign_out
+    sign_in_as(users(:organizer))
+
+    get root_path
+    assert_select "a[href=?]", admin_users_path, false
   end
 
   test "index redirects an unauthenticated visitor to the login screen" do
@@ -135,8 +147,8 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "user", @target.role
   end
 
-  # require_admin runs before the record is looked up, so a denied request answers the same way
-  # whether or not the target exists. Task 5 relies on this.
+  # The Pundit gate runs before the record is looked up, so a denied request answers the same way
+  # whether or not the target exists.
   test "a denied request does not reveal whether the target user exists" do
     sign_out
     sign_in_as(users(:organizer))
@@ -154,6 +166,6 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     patch admin_user_path(id: 0), params: { user: { name: "Neuer Name" } }
 
     assert_redirected_to admin_users_path
-    assert_equal I18n.t("admin.not_found"), flash[:alert]
+    assert_equal I18n.t("authorization.not_found"), flash[:alert]
   end
 end

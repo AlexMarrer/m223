@@ -50,6 +50,11 @@ de:
         password_challenge: "Aktuelles Passwort"
         role: "Rolle"
 
+  # Flash messages for requests that were stopped before they reached their action.
+  authorization:
+    denied: "Für diese Aktion fehlt dir die Berechtigung."
+    not_found: "Dieser Eintrag existiert nicht mehr."
+
   # Role names as agreed in the glossary of docs/spec/PROJECT.md.
   roles:
     user: "Teilnehmer"
@@ -140,8 +145,6 @@ de:
       failed: "Die E-Mail-Adresse konnte nicht bestätigt werden. Bitte fordere den Link erneut an."
 
   admin:
-    not_authorized: "Für diesen Bereich fehlt dir die Berechtigung."
-    not_found: "Dieser Benutzer existiert nicht mehr."
     users:
       index:
         title: "Benutzerverwaltung"

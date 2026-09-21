@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :set_user
+  before_action :authorize_account
 
   def show
   end
@@ -16,6 +17,10 @@ class ProfilesController < ApplicationController
     # The profile always works on the signed-in user and never looks one up by id.
     def set_user
       @user = Current.user
+    end
+
+    def authorize_account
+      authorize @user, :own_account?
     end
 
     # Only the name. The role is an admin's to change, and a new email address has to go through

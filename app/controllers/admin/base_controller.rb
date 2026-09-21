@@ -1,22 +1,20 @@
 # Shared base for the admin-only user management.
 #
-# The role check is the interim authorization boundary until task 5 replaces it with Pundit.
-# It runs before any record is looked up, so a denied request cannot reveal whether the
-# requested user exists. The RecordNotFound rescue lives here for the same reason and moves to
-# ApplicationController once task 5 handles lookup failures centrally.
+# The gate authorizes the User class before any record is looked up, so a denied request answers
+# the same way whether or not the requested user exists.
 class Admin::BaseController < ApplicationController
-  before_action :require_admin
-  rescue_from ActiveRecord::RecordNotFound, with: :user_not_found
+  before_action :authorize_user_management
 
   helper_method :own_account?
 
   private
-    def require_admin
-      redirect_to root_path, alert: t("admin.not_authorized") unless Current.user&.admin?
+    def authorize_user_management
+      authorize User, :manage?
     end
 
-    def user_not_found
-      redirect_to admin_users_path, alert: t("admin.not_found")
+    # A user who no longer exists returns to the list rather than to the start page.
+    def fallback_url
+      admin_users_url
     end
 
     def own_account?

@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
+  # Signing in and out has no record and no role to check: the session is the subject itself.
+  skip_after_action :verify_authorized
   # Full I18n key: the lambda runs as a before_action, so lazy lookup is not reliable here.
   rate_limit to: 10, within: 3.minutes, only: :create,
              with: -> { redirect_to new_session_path, alert: t("sessions.create.rate_limited") }
