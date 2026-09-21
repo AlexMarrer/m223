@@ -1,0 +1,83 @@
+# German is the application default locale. All user-facing text lives here.
+# Rails ships no German translations, so the reachable core keys are defined here too.
+de:
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d.%m."
+      long: "%d. %B %Y"
+    # Indexed by Date#wday, where 0 is Sunday — this order is required by Rails and must not
+    # be rotated. The week itself starts on Monday and ends on Sunday; that is
+    # config.beginning_of_week in config/application.rb, not this array.
+    day_names: [Sonntag, Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag]
+    abbr_day_names: [So, Mo, Di, Mi, Do, Fr, Sa]
+    month_names: [~, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
+    abbr_month_names: [~, Jan, Feb, Mär, Apr, Mai, Jun, Jul, Aug, Sep, Okt, Nov, Dez]
+
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M"
+      short: "%d.%m. %H:%M"
+      long: "%d. %B %Y, %H:%M"
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      blank: "muss ausgefüllt werden"
+      taken: "ist bereits vergeben"
+      confirmation: "stimmt nicht mit %{attribute} überein"
+      inclusion: "ist kein gültiger Wert"
+      too_short: "ist zu kurz (mindestens %{count} Zeichen)"
+      too_long: "ist zu lang (höchstens %{count} Zeichen)"
+      greater_than: "muss grösser als %{count} sein"
+      not_a_number: "ist keine Zahl"
+
+  activerecord:
+    models:
+      user: "Benutzer"
+      concert: "Konzert"
+      registration: "Anmeldung"
+      activity: "Aktivität"
+    attributes:
+      user:
+        name: "Name"
+        email_address: "E-Mail-Adresse"
+        password: "Passwort"
+        password_confirmation: "Passwort-Bestätigung"
+        role: "Rolle"
+
+  layout:
+    brand: "EventDesk"
+    sign_in: "Anmelden"
+    sign_up: "Konto erstellen"
+    sign_out: "Abmelden"
+
+  home:
+    show:
+      title: "Start"
+      greeting: "Willkommen bei EventDesk, %{name}."
+
+  sessions:
+    new:
+      title: "Anmelden"
+      heading: "Anmelden"
+      submit: "Anmelden"
+      email_address: "E-Mail-Adresse"
+      password: "Passwort"
+      sign_up_prompt: "Noch kein Konto?"
+    create:
+      invalid_credentials: "E-Mail-Adresse oder Passwort ist falsch."
+      rate_limited: "Zu viele Anmeldeversuche. Bitte versuche es später erneut."
+    destroy:
+      signed_out: "Du wurdest abgemeldet."
+
+  users:
+    new:
+      title: "Konto erstellen"
+      heading: "Konto erstellen"
+      submit: "Konto erstellen"
+      password_hint: "Mindestens %{count} Zeichen."
+      error_heading: "Das Konto konnte nicht erstellt werden:"
+      sign_in_prompt: "Bereits ein Konto?"
+    create:
+      welcome: "Willkommen bei EventDesk, %{name}."

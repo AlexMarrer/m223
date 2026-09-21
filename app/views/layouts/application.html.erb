@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "M223" %></title>
+    <title><%= content_for(:title) ? "#{content_for(:title)} – EventDesk" : "EventDesk" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="M223">
@@ -24,6 +24,22 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+      <nav>
+        <%= link_to t("layout.brand"), root_path %>
+        <% if authenticated? %>
+          <%= button_to t("layout.sign_out"), session_path, method: :delete %>
+        <% else %>
+          <%= link_to t("layout.sign_in"), new_session_path %>
+          <%= link_to t("layout.sign_up"), new_user_path %>
+        <% end %>
+      </nav>
+    </header>
+
+    <%= render "shared/flash" %>
+
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

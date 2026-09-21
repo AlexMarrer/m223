@@ -66,6 +66,16 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
   end
 
+  test "create lists the errors centrally and leaves the fields unwrapped" do
+    post users_path, params: { user: VALID.merge(name: "") }
+
+    assert_select ".form-errors__item", I18n.t("errors.format",
+      attribute: User.human_attribute_name(:name),
+      message: I18n.t("errors.messages.blank"))
+    assert_select ".field_with_errors", false,
+      "ActionView's global field wrapper is disabled in config/application.rb"
+  end
+
   test "create rejects a blank name" do
     assert_no_difference -> { User.count } do
       post users_path, params: { user: VALID.merge(name: "") }
