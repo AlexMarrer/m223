@@ -31,6 +31,8 @@ de:
       too_long: "ist zu lang (höchstens %{count} Zeichen)"
       greater_than: "muss grösser als %{count} sein"
       not_a_number: "ist keine Zahl"
+      invalid: "ist nicht korrekt"
+      unchanged: "ist bereits deine aktuelle Adresse"
 
   activerecord:
     models:
@@ -42,15 +44,24 @@ de:
       user:
         name: "Name"
         email_address: "E-Mail-Adresse"
+        unconfirmed_email: "Neue E-Mail-Adresse"
         password: "Passwort"
         password_confirmation: "Passwort-Bestätigung"
+        password_challenge: "Aktuelles Passwort"
         role: "Rolle"
+
+  # Role names as agreed in the glossary of docs/spec/PROJECT.md.
+  roles:
+    user: "Teilnehmer"
+    organizer: "Organisator"
+    admin: "Administrator"
 
   layout:
     brand: "EventDesk"
     sign_in: "Anmelden"
     sign_up: "Konto erstellen"
     sign_out: "Abmelden"
+    profile: "Profil"
 
   home:
     show:
@@ -81,3 +92,57 @@ de:
       sign_in_prompt: "Bereits ein Konto?"
     create:
       welcome: "Willkommen bei EventDesk, %{name}."
+
+  profiles:
+    show:
+      title: "Profil"
+      heading: "Profil"
+      submit: "Name speichern"
+      error_heading: "Das Profil konnte nicht gespeichert werden:"
+      account_heading: "Konto"
+      pending_email: "Bestätigung ausstehend für %{email}."
+      change_email: "E-Mail-Adresse ändern"
+      change_password: "Passwort ändern"
+      role_hint: "Deine Rolle kann nur ein Administrator ändern."
+    update:
+      updated: "Dein Profil wurde gespeichert."
+
+  passwords:
+    edit:
+      title: "Passwort ändern"
+      heading: "Passwort ändern"
+      submit: "Passwort ändern"
+      new_password: "Neues Passwort"
+      new_password_confirmation: "Neues Passwort bestätigen"
+      password_hint: "Mindestens %{count} Zeichen."
+      error_heading: "Das Passwort konnte nicht geändert werden:"
+      back: "Zurück zum Profil"
+    update:
+      updated: "Dein Passwort wurde geändert."
+
+  email_changes:
+    new:
+      title: "E-Mail-Adresse ändern"
+      heading: "E-Mail-Adresse ändern"
+      submit: "Bestätigungslink senden"
+      current_email: "Aktuelle E-Mail-Adresse"
+      hint: "Die neue Adresse wird erst aktiv, nachdem du den Bestätigungslink geöffnet hast."
+      error_heading: "Die E-Mail-Adresse konnte nicht geändert werden:"
+      back: "Zurück zum Profil"
+    create:
+      confirmation_sent: "Wir haben einen Bestätigungslink an %{email} gesendet."
+
+  email_confirmations:
+    show:
+      confirmed: "Deine E-Mail-Adresse wurde auf %{email} geändert."
+      invalid_token: "Dieser Bestätigungslink ist ungültig oder abgelaufen."
+      failed: "Die E-Mail-Adresse konnte nicht bestätigt werden. Bitte fordere den Link erneut an."
+
+  user_mailer:
+    email_confirmation:
+      subject: "EventDesk: Neue E-Mail-Adresse bestätigen"
+      greeting: "Hallo %{name}"
+      body: "Bitte bestätige deine neue E-Mail-Adresse für EventDesk."
+      action: "E-Mail-Adresse bestätigen"
+      expiry_hint: "Der Link ist %{hours} Stunden gültig."
+      ignore_hint: "Wenn du diese Änderung nicht angefordert hast, kannst du diese E-Mail ignorieren. Deine bisherige Adresse bleibt dann aktiv."

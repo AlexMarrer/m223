@@ -1,0 +1,15 @@
+.profile__term {
+  font-weight: 600;
+}
+
+.profile__value {
+  margin: 0 0 0.5rem;
+}
+
+.profile__pending {
+  color: #7a5c00;
+}
+
+.profile__hint {
+  color: #555;
+}

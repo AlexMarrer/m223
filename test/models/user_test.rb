@@ -102,6 +102,99 @@ class UserTest < ActiveSupport::TestCase
     assert_includes admin.activities, activity
   end
 
+  test "generates an email confirmation token that finds the user" do
+    user = users(:one)
+    user.update!(unconfirmed_email: "neu@example.com")
+
+    token = user.generate_token_for(:email_confirmation)
+
+    assert_equal user, User.find_by_token_for(:email_confirmation, token)
+  end
+
+  test "rejects an email confirmation token after the change was confirmed" do
+    user = users(:one)
+    user.update!(unconfirmed_email: "neu@example.com")
+    token = user.generate_token_for(:email_confirmation)
+
+    assert user.confirm_email
+
+    assert_nil User.find_by_token_for(:email_confirmation, token)
+  end
+
+  test "rejects an email confirmation token after a newer change was requested" do
+    user = users(:one)
+    user.update!(unconfirmed_email: "neu@example.com")
+    token = user.generate_token_for(:email_confirmation)
+
+    user.update!(unconfirmed_email: "noch-neuer@example.com")
+
+    assert_nil User.find_by_token_for(:email_confirmation, token)
+  end
+
+  test "rejects an expired email confirmation token" do
+    user = users(:one)
+    user.update!(unconfirmed_email: "neu@example.com")
+    token = user.generate_token_for(:email_confirmation)
+
+    travel User::EMAIL_CONFIRMATION_EXPIRY + 1.minute do
+      assert_nil User.find_by_token_for(:email_confirmation, token)
+    end
+  end
+
+  test "rejects a pending email address that belongs to another user" do
+    user = users(:one)
+    user.unconfirmed_email = users(:two).email_address
+
+    assert_not user.valid?
+    assert_includes user.errors.attribute_names, :unconfirmed_email
+  end
+
+  test "rejects a pending email address that is already the current one" do
+    user = users(:one)
+    user.unconfirmed_email = user.email_address
+
+    assert_not user.valid?
+    assert_includes user.errors.attribute_names, :unconfirmed_email
+  end
+
+  test "requires a pending email address in the email_change context only" do
+    user = users(:one)
+
+    assert user.valid?
+    assert_not user.valid?(:email_change)
+    assert_includes user.errors.attribute_names, :unconfirmed_email
+  end
+
+  test "confirm_email moves the pending address over and clears it" do
+    user = users(:one)
+    user.update!(unconfirmed_email: "neu@example.com")
+
+    assert user.confirm_email
+
+    user.reload
+    assert_equal "neu@example.com", user.email_address
+    assert_nil user.unconfirmed_email
+  end
+
+  test "confirm_email keeps the pending change when the address was taken meanwhile" do
+    user = users(:one)
+    user.update_column(:unconfirmed_email, users(:two).email_address)
+
+    assert_not user.confirm_email
+    assert_equal users(:two).email_address, user.unconfirmed_email
+
+    user.reload
+    assert_equal "one@example.com", user.email_address
+    assert_equal users(:two).email_address, user.unconfirmed_email
+  end
+
+  test "confirm_email does nothing without a pending address" do
+    user = users(:one)
+
+    assert_not user.confirm_email
+    assert_equal "one@example.com", user.reload.email_address
+  end
+
   private
     def build_user(**attributes)
       User.new({

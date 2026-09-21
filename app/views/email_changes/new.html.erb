@@ -1,0 +1,31 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<p>
+  <%= t(".current_email") %>:
+  <%= @user.email_address %>
+</p>
+
+<%= form_with model: @user, url: email_change_path, method: :post do |form| %>
+  <% if @user.errors.any? %>
+    <div class="form-errors">
+      <p class="form-errors__title"><%= t(".error_heading") %></p>
+      <ul class="form-errors__list">
+        <% @user.errors.full_messages.each do |message| %>
+          <li class="form-errors__item"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :unconfirmed_email %><br>
+    <%= form.email_field :unconfirmed_email, required: true, autofocus: true, autocomplete: "email" %>
+    <span><%= t(".hint") %></span>
+  </div>
+
+  <%= form.submit t(".submit") %>
+<% end %>
+
+<p><%= link_to t(".back"), profile_path %></p>

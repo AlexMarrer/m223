@@ -1,0 +1,11 @@
+.flash {
+  margin: 0.5rem 0;
+}
+
+.flash--alert {
+  color: #b00020;
+}
+
+.flash--notice {
+  color: #00701a;
+}

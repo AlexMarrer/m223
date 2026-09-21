@@ -8,6 +8,8 @@ class SessionsController < ApplicationController
   end
 
   def create
+    # authenticate_by hashes a dummy password when no record matches, so the response time does
+    # not reveal whether the address exists. find_by + authenticate would return early instead.
     if user = User.authenticate_by(params.permit(:email_address, :password))
       start_new_session_for user
       redirect_to after_authentication_url

@@ -23,18 +23,8 @@ module M223
     # pinned explicitly because task 6 groups concerts by week.
     config.beginning_of_week = :monday
 
-    # Render a form field with errors exactly as written, without ActionView's
-    # <div class="field_with_errors"> wrapper. Validation messages are listed centrally in the
-    # form-errors block; marking single fields invalid is done explicitly in the form that
-    # needs it, not through a global wrapper.
+    # Render a field with errors exactly as written, without ActionView's field_with_errors
+    # wrapper. Validation messages are listed centrally in the form-errors block instead.
     config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
-
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
   end
 end

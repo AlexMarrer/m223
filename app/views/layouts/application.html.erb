@@ -28,6 +28,7 @@
       <nav>
         <%= link_to t("layout.brand"), root_path %>
         <% if authenticated? %>
+          <%= link_to t("layout.profile"), profile_path %>
           <%= button_to t("layout.sign_out"), session_path, method: :delete %>
         <% else %>
           <%= link_to t("layout.sign_in"), new_session_path %>

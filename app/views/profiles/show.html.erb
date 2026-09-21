@@ -1,0 +1,46 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<%= form_with model: @user, url: profile_path, method: :patch do |form| %>
+  <% if @user.errors.any? %>
+    <div class="form-errors">
+      <p class="form-errors__title"><%= t(".error_heading") %></p>
+      <ul class="form-errors__list">
+        <% @user.errors.full_messages.each do |message| %>
+          <li class="form-errors__item"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name, required: true, autofocus: true, autocomplete: "name" %>
+  </div>
+
+  <%= form.submit t(".submit") %>
+<% end %>
+
+<h2><%= t(".account_heading") %></h2>
+
+<dl class="profile">
+  <dt class="profile__term"><%= User.human_attribute_name(:email_address) %></dt>
+  <dd class="profile__value">
+    <%= @user.email_address %>
+    <% if @user.unconfirmed_email.present? %>
+      <span class="profile__pending"><%= t(".pending_email", email: @user.unconfirmed_email) %></span>
+    <% end %>
+  </dd>
+
+  <dt class="profile__term"><%= User.human_attribute_name(:role) %></dt>
+  <dd class="profile__value">
+    <%= t("roles.#{@user.role}") %>
+    <span class="profile__hint"><%= t(".role_hint") %></span>
+  </dd>
+</dl>
+
+<p>
+  <%= link_to t(".change_email"), new_email_change_path %>
+  <%= link_to t(".change_password"), edit_password_path %>
+</p>

@@ -34,6 +34,10 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # Action Mailer dumps the rendered mail quoted-printable, which breaks the confirmation URL
+  # across lines. UserMailer logs that link unwrapped, so the dump only competes with it.
+  config.action_mailer.logger = nil
+
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
