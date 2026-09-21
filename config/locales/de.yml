@@ -32,7 +32,7 @@ de:
       greater_than: "muss grösser als %{count} sein"
       not_a_number: "ist keine Zahl"
       invalid: "ist nicht korrekt"
-      unchanged: "ist bereits deine aktuelle Adresse"
+      unchanged: "ist bereits die aktuelle Adresse"
 
   activerecord:
     models:
@@ -62,6 +62,7 @@ de:
     sign_up: "Konto erstellen"
     sign_out: "Abmelden"
     profile: "Profil"
+    user_management: "Benutzerverwaltung"
 
   home:
     show:
@@ -137,6 +138,33 @@ de:
       confirmed: "Deine E-Mail-Adresse wurde auf %{email} geändert."
       invalid_token: "Dieser Bestätigungslink ist ungültig oder abgelaufen."
       failed: "Die E-Mail-Adresse konnte nicht bestätigt werden. Bitte fordere den Link erneut an."
+
+  admin:
+    not_authorized: "Für diesen Bereich fehlt dir die Berechtigung."
+    not_found: "Dieser Benutzer existiert nicht mehr."
+    users:
+      index:
+        title: "Benutzerverwaltung"
+        heading: "Benutzerverwaltung"
+        edit: "Bearbeiten"
+        pending_email: "Bestätigung ausstehend für %{email}."
+      edit:
+        title: "Benutzer bearbeiten"
+        heading: "%{name} bearbeiten"
+        submit: "Änderungen speichern"
+        error_heading: "Der Benutzer konnte nicht gespeichert werden:"
+        own_role_hint: "Du kannst deine eigene Rolle nicht ändern."
+        email_heading: "E-Mail-Adresse ändern"
+        current_email: "Aktuelle E-Mail-Adresse"
+        pending_email: "Bestätigung ausstehend für %{email}."
+        email_hint: "Die neue Adresse wird erst aktiv, nachdem der Benutzer den Bestätigungslink geöffnet hat."
+        email_submit: "Bestätigungslink senden"
+        back: "Zurück zur Übersicht"
+      update:
+        updated: "%{name} wurde gespeichert."
+    email_changes:
+      create:
+        confirmation_sent: "Wir haben einen Bestätigungslink an %{email} gesendet."
 
   user_mailer:
     email_confirmation:

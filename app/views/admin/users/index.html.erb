@@ -1,0 +1,30 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<table class="user-list">
+  <thead>
+    <tr>
+      <th class="user-list__header"><%= User.human_attribute_name(:name) %></th>
+      <th class="user-list__header"><%= User.human_attribute_name(:email_address) %></th>
+      <th class="user-list__header"><%= User.human_attribute_name(:role) %></th>
+      <th class="user-list__header"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="user-list__cell"><%= user.name %></td>
+        <td class="user-list__cell">
+          <%= user.email_address %>
+          <% if user.unconfirmed_email.present? %>
+            <span class="user-list__pending"><%= t(".pending_email", email: user.unconfirmed_email) %></span>
+          <% end %>
+        </td>
+        <td class="user-list__cell"><%= t("roles.#{user.role}") %></td>
+        <td class="user-list__cell"><%= link_to t(".edit"), edit_admin_user_path(user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

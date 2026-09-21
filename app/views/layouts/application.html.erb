@@ -29,6 +29,9 @@
         <%= link_to t("layout.brand"), root_path %>
         <% if authenticated? %>
           <%= link_to t("layout.profile"), profile_path %>
+          <% if Current.user.admin? %>
+            <%= link_to t("layout.user_management"), admin_users_path %>
+          <% end %>
           <%= button_to t("layout.sign_out"), session_path, method: :delete %>
         <% else %>
           <%= link_to t("layout.sign_in"), new_session_path %>

@@ -1,0 +1,56 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading", name: @user.name) %></h1>
+
+<% if @user.errors.any? %>
+  <div class="form-errors">
+    <p class="form-errors__title"><%= t(".error_heading") %></p>
+    <ul class="form-errors__list">
+      <% @user.errors.full_messages.each do |message| %>
+        <li class="form-errors__item"><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @user, url: admin_user_path(@user), method: :patch do |form| %>
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name, required: true, autofocus: true, autocomplete: "off" %>
+  </div>
+
+  <div>
+    <% if own_account? %>
+      <%= User.human_attribute_name(:role) %><br>
+      <%= t("roles.#{@user.role}") %>
+      <span class="user-form__hint"><%= t(".own_role_hint") %></span>
+    <% else %>
+      <%= form.label :role %><br>
+      <%= form.select :role, User.roles.keys.map { |role| [ t("roles.#{role}"), role ] } %>
+    <% end %>
+  </div>
+
+  <%= form.submit t(".submit") %>
+<% end %>
+
+<h2><%= t(".email_heading") %></h2>
+
+<p>
+  <%= t(".current_email") %>:
+  <%= @user.email_address %>
+  <% if @user.unconfirmed_email.present? %>
+    <span class="user-form__pending"><%= t(".pending_email", email: @user.unconfirmed_email) %></span>
+  <% end %>
+</p>
+
+<%= form_with model: @user, url: admin_user_email_change_path(@user), method: :post do |form| %>
+  <div>
+    <%= form.label :unconfirmed_email %><br>
+    <%= form.email_field :unconfirmed_email, required: true, autocomplete: "off" %>
+    <span><%= t(".email_hint") %></span>
+  </div>
+
+  <%= form.submit t(".email_submit") %>
+<% end %>
+
+<p><%= link_to t(".back"), admin_users_path %></p>
