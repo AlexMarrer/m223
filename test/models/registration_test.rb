@@ -62,4 +62,30 @@ class RegistrationTest < ActiveSupport::TestCase
     registration.destroy!
     assert_equal 10, @concert.reload.free_seats
   end
+
+  test "withdraw removes the registration of an upcoming published concert" do
+    concert = Concert.create!(published_concert_attributes)
+    registration = concert.register(users(:one))
+
+    assert registration.withdraw
+    assert_not Registration.exists?(registration.id)
+  end
+
+  test "withdraw is rejected once the concert is cancelled or has started" do
+    concert = Concert.create!(published_concert_attributes)
+    cancelled_registration = concert.register(users(:one))
+    concert.cancel
+
+    assert_not cancelled_registration.withdraw
+    assert Registration.exists?(cancelled_registration.id)
+    assert_equal [ I18n.t("activerecord.errors.models.registration.attributes.base.closed") ],
+                 cancelled_registration.errors.full_messages
+
+    started = Concert.create!(published_concert_attributes)
+    started_registration = started.register(users(:two))
+    started.update_columns(starts_at: 1.hour.ago, ends_at: 1.hour.from_now)
+
+    assert_not started_registration.withdraw
+    assert Registration.exists?(started_registration.id)
+  end
 end

@@ -1,0 +1,7 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<%= render "concerts/form", concert: @concert %>
+
+<p><%= link_to t(".back"), concerts_path %></p>

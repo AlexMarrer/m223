@@ -100,6 +100,22 @@ class ConcertTest < ActiveSupport::TestCase
     assert Concert.new(concert_attributes(playlist_url: "https://example.com/playlist")).valid?
   end
 
+  test "rejects a playlist_url that is not an http address" do
+    [ "javascript:alert(1)", "example.com/playlist", "https://example.com\njavascript:alert(1)" ].each do |url|
+      concert = Concert.new(concert_attributes(playlist_url: url))
+
+      assert_not concert.valid?, "#{url} should be invalid"
+      assert_includes concert.errors.attribute_names, :playlist_url
+    end
+  end
+
+  test "reads the setlist as one song per line" do
+    concert = Concert.new(concert_attributes(setlist: "Erster Song\n\n  Zweiter Song  \n"))
+
+    assert_equal [ "Erster Song", "Zweiter Song" ], concert.setlist_lines
+    assert_equal [], Concert.new(concert_attributes).setlist_lines
+  end
+
   test "calculates free seats from capacity minus registrations" do
     concert = Concert.create!(concert_attributes(capacity: 2))
     assert_equal 2, concert.free_seats
@@ -137,6 +153,140 @@ class ConcertTest < ActiveSupport::TestCase
 
     assert_not concert.destroy
     assert Concert.exists?(concert.id)
+  end
+
+  test "registers a user for a published concert" do
+    concert = Concert.create!(published_concert_attributes)
+
+    registration = concert.register(users(:one))
+
+    assert registration.persisted?
+    assert_equal users(:one), registration.user
+    assert_equal 1, concert.reload.registrations.count
+  end
+
+  test "rejects a second registration of the same user" do
+    concert = Concert.create!(published_concert_attributes)
+    concert.register(users(:one))
+
+    duplicate = concert.register(users(:one))
+
+    assert_not duplicate.persisted?
+    assert_equal [ I18n.t("activerecord.errors.models.registration.attributes.base.duplicate") ],
+                 duplicate.errors.full_messages
+    assert_equal 1, concert.reload.registrations.count
+  end
+
+  test "rejects a registration for a full concert" do
+    concert = Concert.create!(published_concert_attributes(capacity: 1))
+    concert.register(users(:one))
+
+    registration = concert.register(users(:two))
+
+    assert_not registration.persisted?
+    assert_equal [ I18n.t("activerecord.errors.models.registration.attributes.base.full") ],
+                 registration.errors.full_messages
+  end
+
+  test "rejects a registration for a draft, a cancelled and a started concert" do
+    closed = [
+      Concert.create!(concert_attributes),
+      Concert.create!(published_concert_attributes(status: :cancelled)),
+      Concert.create!(published_concert_attributes(starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
+    ]
+
+    closed.each do |concert|
+      registration = concert.register(users(:one))
+
+      assert_not registration.persisted?, "#{concert.status} concert accepted a registration"
+      assert_equal [ I18n.t("activerecord.errors.models.registration.attributes.base.closed") ],
+                   registration.errors.full_messages
+    end
+  end
+
+  test "frees the seat again after a cancellation and allows a new registration" do
+    concert = Concert.create!(published_concert_attributes(capacity: 1))
+    registration = concert.register(users(:one))
+
+    assert registration.withdraw
+    assert_equal 1, concert.reload.free_seats
+
+    assert concert.register(users(:two)).persisted?
+  end
+
+  test "publishes a draft" do
+    concert = Concert.create!(concert_attributes(description: "Beschreibung", setlist: "Song"))
+
+    assert concert.publish
+    assert concert.reload.published?
+  end
+
+  test "rejects publishing without a description or a setlist" do
+    concert = Concert.create!(concert_attributes)
+
+    assert_not concert.publish
+    assert concert.reload.draft?
+    assert_includes concert.errors.attribute_names, :description
+    assert_includes concert.errors.attribute_names, :setlist
+  end
+
+  test "rejects publishing a concert that is not an upcoming draft" do
+    published = Concert.create!(published_concert_attributes)
+    started = Concert.create!(concert_attributes(description: "B", setlist: "S",
+                                                 starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
+
+    [ published, started ].each do |concert|
+      assert_not concert.publish
+      assert_includes concert.errors.full_messages,
+                      I18n.t("activerecord.errors.models.concert.attributes.base.not_publishable")
+    end
+  end
+
+  test "cancels a published concert and keeps its registrations" do
+    concert = Concert.create!(published_concert_attributes)
+    concert.register(users(:one))
+
+    assert concert.cancel
+    assert concert.reload.cancelled?
+    assert_equal 1, concert.registrations.count
+  end
+
+  test "rejects cancelling a draft or a started concert" do
+    draft = Concert.create!(concert_attributes)
+    started = Concert.create!(published_concert_attributes(starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
+
+    [ draft, started ].each do |concert|
+      assert_not concert.cancel
+      assert_includes concert.errors.full_messages,
+                      I18n.t("activerecord.errors.models.concert.attributes.base.not_cancellable")
+    end
+  end
+
+  test "rejects a capacity below the current occupancy" do
+    concert = Concert.create!(published_concert_attributes(capacity: 2))
+    concert.register(users(:one))
+    concert.register(users(:two))
+
+    assert_not concert.apply_changes(capacity: 1)
+    assert_includes concert.errors.attribute_names, :capacity
+    assert_equal 2, concert.reload.capacity
+  end
+
+  test "accepts a capacity equal to the current occupancy" do
+    concert = Concert.create!(published_concert_attributes(capacity: 2))
+    concert.register(users(:one))
+
+    assert concert.apply_changes(capacity: 1)
+    assert_equal 1, concert.reload.capacity
+  end
+
+  test "rejects a change based on a stale version" do
+    concert = Concert.create!(concert_attributes)
+    stale = Concert.find(concert.id)
+    concert.apply_changes(title: "Neuer Titel")
+
+    assert_raises(ActiveRecord::StaleObjectError) { stale.apply_changes(title: "Konkurrierender Titel") }
+    assert_equal "Neuer Titel", concert.reload.title
   end
 
   private

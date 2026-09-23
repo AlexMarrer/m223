@@ -1,0 +1,13 @@
+.participant-list {
+  border-collapse: collapse;
+}
+
+.participant-list__header {
+  text-align: left;
+  padding: 0.25rem 1rem 0.25rem 0;
+}
+
+.participant-list__cell {
+  padding: 0.25rem 1rem 0.25rem 0;
+  vertical-align: top;
+}

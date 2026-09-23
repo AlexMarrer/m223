@@ -1,0 +1,37 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<% if @registrations.any? %>
+  <table class="concert-list">
+    <thead>
+      <tr>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:title) %></th>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:starts_at) %></th>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:status) %></th>
+        <th class="concert-list__header"><%= Registration.human_attribute_name(:created_at) %></th>
+        <th class="concert-list__header"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @registrations.each do |registration| %>
+        <% concert = registration.concert %>
+        <tr>
+          <td class="concert-list__cell"><%= link_to concert.title, concert %></td>
+          <td class="concert-list__cell"><%= l concert.starts_at, format: :long %></td>
+          <td class="concert-list__cell"><%= t("concerts.statuses.#{concert.status}") %></td>
+          <td class="concert-list__cell"><%= l registration.created_at, format: :short %></td>
+          <td class="concert-list__cell">
+            <% if policy(registration).destroy? %>
+              <%= button_to t(".withdraw"), concert_registration_path(concert), method: :delete,
+                            data: { turbo_confirm: t(".withdraw_confirm") } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><%= t(".empty") %></p>
+<% end %>

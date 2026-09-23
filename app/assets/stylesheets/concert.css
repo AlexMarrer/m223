@@ -1,0 +1,20 @@
+.concert__term {
+  font-weight: bold;
+}
+
+.concert__value {
+  margin: 0 0 0.5rem;
+}
+
+.concert__notice {
+  color: #7a5c00;
+}
+
+.concert__setlist {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.concert__hint {
+  color: #555;
+}

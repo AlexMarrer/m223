@@ -1,0 +1,16 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading", title: @concert.title) %></h1>
+
+<% if @stale %>
+  <div class="form-errors">
+    <p class="form-errors__title"><%= t(".stale") %></p>
+    <p><%= link_to t(".reload"), edit_concert_path(@concert) %></p>
+  </div>
+<% end %>
+
+<%# Named in full because Concerts::PublicationsController renders this template too, and a
+    relative partial would be looked up under its own controller path. %>
+<%= render "concerts/form", concert: @concert %>
+
+<p><%= link_to t(".back"), @concert %></p>

@@ -20,5 +20,14 @@ module ActiveSupport
         ends_at: starts_at + 2.hours
       }.merge(attributes)
     end
+
+    # Everything past draft has to carry a description and a setlist to survive validation.
+    def published_concert_attributes(**attributes)
+      concert_attributes(
+        status: :published,
+        description: "Ein Abend mit Klaviermusik.",
+        setlist: "Nocturne op. 9 Nr. 2\nBallade Nr. 1"
+      ).merge(attributes)
+    end
   end
 end

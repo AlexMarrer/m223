@@ -1,0 +1,54 @@
+<%= form_with model: concert do |form| %>
+  <% if concert.errors.any? %>
+    <div class="form-errors">
+      <p class="form-errors__title"><%= t(".error_heading") %></p>
+      <ul class="form-errors__list">
+        <% concert.errors.full_messages.each do |message| %>
+          <li class="form-errors__item"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Rails does not add this by itself, and without it every save would look current. %>
+  <%= form.hidden_field :lock_version %>
+
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title, required: true, autofocus: true, autocomplete: "off" %>
+  </div>
+
+  <div>
+    <%= form.label :starts_at %><br>
+    <%= form.datetime_field :starts_at, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :ends_at %><br>
+    <%= form.datetime_field :ends_at, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :capacity %><br>
+    <%= form.number_field :capacity, required: true, min: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_area :description, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.label :setlist %><br>
+    <%= form.text_area :setlist, rows: 6 %>
+    <span class="concert__hint"><%= t(".setlist_hint") %></span>
+  </div>
+
+  <div>
+    <%= form.label :playlist_url %><br>
+    <%= form.url_field :playlist_url %>
+    <span class="concert__hint"><%= t(".playlist_hint") %></span>
+  </div>
+
+  <%= form.submit t(".submit") %>
+<% end %>

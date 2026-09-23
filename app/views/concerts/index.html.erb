@@ -1,0 +1,43 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<% if policy(Concert).create? %>
+  <p>
+    <%= link_to t(".new"), new_concert_path %>
+    <span class="concert-list__hint"><%= t(".drafts_hint") %></span>
+  </p>
+<% end %>
+
+<% if @concerts.any? %>
+  <table class="concert-list">
+    <thead>
+      <tr>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:title) %></th>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:starts_at) %></th>
+        <th class="concert-list__header"><%= Concert.human_attribute_name(:status) %></th>
+        <th class="concert-list__header"><%= t("concerts.free_seats") %></th>
+        <th class="concert-list__header"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @concerts.each do |concert| %>
+        <tr>
+          <td class="concert-list__cell"><%= link_to concert.title, concert %></td>
+          <td class="concert-list__cell"><%= l concert.starts_at, format: :long %></td>
+          <td class="concert-list__cell"><%= t("concerts.statuses.#{concert.status}") %></td>
+          <td class="concert-list__cell"><%= @free_seats[concert] %></td>
+          <td class="concert-list__cell">
+            <%= link_to t(".show"), concert %>
+            <% if policy(concert).update? %>
+              <%= link_to t(".edit"), edit_concert_path(concert) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><%= t(".empty") %></p>
+<% end %>

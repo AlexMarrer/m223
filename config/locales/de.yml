@@ -49,6 +49,41 @@ de:
         password_confirmation: "Passwort-Bestätigung"
         password_challenge: "Aktuelles Passwort"
         role: "Rolle"
+      concert:
+        title: "Titel"
+        description: "Beschreibung"
+        setlist: "Setlist"
+        playlist_url: "Playlist-Link"
+        capacity: "Kapazität"
+        status: "Status"
+        starts_at: "Beginn"
+        ends_at: "Ende"
+        creator: "Ersteller"
+      registration:
+        user: "Teilnehmer"
+        concert: "Konzert"
+        created_at: "Anmeldezeitpunkt"
+    errors:
+      models:
+        concert:
+          attributes:
+            base:
+              not_publishable: "Dieses Konzert kann nicht mehr veröffentlicht werden."
+              not_cancellable: "Dieses Konzert kann nicht mehr abgesagt werden."
+            capacity:
+              below_occupancy:
+                one: "kann nicht unter die aktuelle Belegung von einer Anmeldung gesenkt werden"
+                other: "kann nicht unter die aktuelle Belegung von %{count} Anmeldungen gesenkt werden"
+            ends_at:
+              after_starts_at: "muss nach dem Beginn liegen"
+            playlist_url:
+              invalid: "muss mit http:// oder https:// beginnen"
+        registration:
+          attributes:
+            base:
+              closed: "Für dieses Konzert sind keine Anmeldungen möglich."
+              full: "Dieses Konzert ist bereits ausgebucht."
+              duplicate: "Du bist für dieses Konzert bereits angemeldet."
 
   # Flash messages for requests that were stopped before they reached their action.
   authorization:
@@ -67,12 +102,95 @@ de:
     sign_up: "Konto erstellen"
     sign_out: "Abmelden"
     profile: "Profil"
+    concerts: "Konzerte"
+    my_registrations: "Meine Anmeldungen"
     user_management: "Benutzerverwaltung"
 
-  home:
+  concerts:
+    # Shared by the listing and the detail screen, so neither borrows the other's key.
+    free_seats: "Freie Plätze"
+    statuses:
+      draft: "Entwurf"
+      published: "Veröffentlicht"
+      cancelled: "Abgesagt"
+    index:
+      title: "Konzerte"
+      heading: "Konzerte"
+      new: "Neues Konzert"
+      drafts_hint: "Entwürfe sind nur für Organisatoren und Administratoren sichtbar."
+      empty: "Zurzeit sind keine Konzerte ausgeschrieben."
+      show: "Details"
+      edit: "Bearbeiten"
     show:
-      title: "Start"
-      greeting: "Willkommen bei EventDesk, %{name}."
+      description_heading: "Beschreibung"
+      setlist_heading: "Setlist"
+      playlist: "Playlist öffnen"
+      seats: "%{free} von %{capacity} Plätzen frei"
+      full: "Dieses Konzert ist ausgebucht."
+      started: "Dieses Konzert hat bereits begonnen."
+      cancelled: "Dieses Konzert wurde abgesagt. Bestehende Anmeldungen bleiben bestehen."
+      draft: "Dieses Konzert ist noch ein Entwurf und für Teilnehmer nicht sichtbar."
+      registered: "Du bist für dieses Konzert angemeldet."
+      register: "Anmelden"
+      withdraw: "Anmeldung stornieren"
+      withdraw_confirm: "Möchtest du deine Anmeldung wirklich stornieren?"
+      missing_description: "Noch keine Beschreibung erfasst."
+      missing_setlist: "Noch keine Setlist erfasst."
+      management_heading: "Verwaltung"
+      edit: "Bearbeiten"
+      publish: "Veröffentlichen"
+      cancel: "Konzert absagen"
+      cancel_confirm: "Möchtest du dieses Konzert wirklich absagen?"
+      destroy: "Entwurf löschen"
+      destroy_confirm: "Möchtest du diesen Entwurf wirklich löschen?"
+      participants: "Teilnehmerliste"
+      back: "Zurück zur Übersicht"
+    new:
+      title: "Konzert erstellen"
+      heading: "Konzert erstellen"
+      back: "Zurück zur Übersicht"
+    edit:
+      title: "Konzert bearbeiten"
+      heading: "%{title} bearbeiten"
+      stale: "Dieses Konzert wurde zwischenzeitlich geändert. Deine Eingaben wurden nicht gespeichert."
+      reload: "Aktuellen Stand neu laden"
+      back: "Zurück zum Konzert"
+    form:
+      submit: "Speichern"
+      error_heading: "Das Konzert konnte nicht gespeichert werden:"
+      setlist_hint: "Ein Song pro Zeile, in der geplanten Reihenfolge."
+      playlist_hint: "Optional. Öffnet eine externe Playlist."
+    create:
+      created: "Das Konzert wurde als Entwurf gespeichert."
+    update:
+      updated: "Das Konzert wurde gespeichert."
+    destroy:
+      destroyed: "Der Entwurf wurde gelöscht."
+      not_destroyed: "Der Entwurf konnte nicht gelöscht werden."
+    publications:
+      create:
+        published: "Das Konzert wurde veröffentlicht."
+    cancellations:
+      create:
+        cancelled: "Das Konzert wurde abgesagt."
+    participants:
+      index:
+        title: "Teilnehmerliste"
+        heading: "Teilnehmerliste – %{title}"
+        empty: "Für dieses Konzert liegen keine Anmeldungen vor."
+        back: "Zurück zum Konzert"
+
+  registrations:
+    index:
+      title: "Meine Anmeldungen"
+      heading: "Meine Anmeldungen"
+      empty: "Du bist für kein Konzert angemeldet."
+      withdraw: "Stornieren"
+      withdraw_confirm: "Möchtest du deine Anmeldung wirklich stornieren?"
+    create:
+      created: "Du bist für %{title} angemeldet."
+    destroy:
+      destroyed: "Deine Anmeldung für %{title} wurde storniert."
 
   sessions:
     new:

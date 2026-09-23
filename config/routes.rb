@@ -1,8 +1,22 @@
 Rails.application.routes.draw do
-  root "home#show"
+  root "concerts#index"
 
   resource :session
   resources :users, only: %i[ new create ]
+
+  resources :concerts do
+    resource :registration, only: %i[ create destroy ]
+
+    # State changes and the participant list are resources of their own, the way the account
+    # screens already model them, instead of extra verbs on ConcertsController.
+    scope module: :concerts do
+      resource :publication, only: :create
+      resource :cancellation, only: :create
+      resources :participants, only: :index
+    end
+  end
+
+  resources :registrations, only: :index
 
   resource :profile, only: %i[ show update ]
   resource :password, only: %i[ edit update ]

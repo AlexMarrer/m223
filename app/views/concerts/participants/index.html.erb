@@ -1,0 +1,29 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading", title: @concert.title) %></h1>
+
+<% if @registrations.any? %>
+  <table class="participant-list">
+    <thead>
+      <tr>
+        <th class="participant-list__header"><%= User.human_attribute_name(:name) %></th>
+        <th class="participant-list__header"><%= User.human_attribute_name(:email_address) %></th>
+        <th class="participant-list__header"><%= Registration.human_attribute_name(:created_at) %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @registrations.each do |registration| %>
+        <tr>
+          <td class="participant-list__cell"><%= registration.user.name %></td>
+          <td class="participant-list__cell"><%= registration.user.email_address %></td>
+          <td class="participant-list__cell"><%= l registration.created_at, format: :short %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><%= t(".empty") %></p>
+<% end %>
+
+<p><%= link_to t(".back"), @concert %></p>

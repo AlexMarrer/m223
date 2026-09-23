@@ -3,6 +3,12 @@
 #
 # The record is a Registration carrying the concert — for create? an unsaved one.
 class RegistrationPolicy < ApplicationPolicy
+  # Everyone may open their own list. Which registrations are in it is not a policy question:
+  # RegistrationsController reads them from Current.user.
+  def index?
+    true
+  end
+
   # No role restriction: organizers and admins take part like everyone else.
   def create?
     open_for_registration?

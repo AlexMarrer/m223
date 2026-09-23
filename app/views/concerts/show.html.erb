@@ -1,0 +1,87 @@
+<% content_for :title, @concert.title %>
+
+<h1><%= @concert.title %></h1>
+
+<dl class="concert">
+  <dt class="concert__term"><%= Concert.human_attribute_name(:status) %></dt>
+  <dd class="concert__value"><%= t("concerts.statuses.#{@concert.status}") %></dd>
+
+  <dt class="concert__term"><%= Concert.human_attribute_name(:starts_at) %></dt>
+  <dd class="concert__value"><%= l @concert.starts_at, format: :long %></dd>
+
+  <dt class="concert__term"><%= Concert.human_attribute_name(:ends_at) %></dt>
+  <dd class="concert__value"><%= l @concert.ends_at, format: :long %></dd>
+
+  <dt class="concert__term"><%= t("concerts.free_seats") %></dt>
+  <dd class="concert__value"><%= t(".seats", free: @concert.free_seats, capacity: @concert.capacity) %></dd>
+</dl>
+
+<% if @concert.draft? %>
+  <p class="concert__notice"><%= t(".draft") %></p>
+<% elsif @concert.cancelled? %>
+  <p class="concert__notice"><%= t(".cancelled") %></p>
+<% elsif @concert.started? %>
+  <p class="concert__notice"><%= t(".started") %></p>
+<% end %>
+
+<h2><%= t(".description_heading") %></h2>
+<p><%= @concert.description.presence || t(".missing_description") %></p>
+
+<h2><%= t(".setlist_heading") %></h2>
+<% if @concert.setlist_lines.any? %>
+  <ol class="concert__setlist">
+    <% @concert.setlist_lines.each do |song| %>
+      <li class="concert__song"><%= song %></li>
+    <% end %>
+  </ol>
+<% else %>
+  <p><%= t(".missing_setlist") %></p>
+<% end %>
+
+<% if @concert.playlist_url.present? %>
+  <p><%= link_to t(".playlist"), @concert.playlist_url, target: "_blank", rel: "noopener" %></p>
+<% end %>
+
+<% if @registration.persisted? %>
+  <p class="concert__notice"><%= t(".registered") %></p>
+
+  <% if policy(@registration).destroy? %>
+    <%= button_to t(".withdraw"), concert_registration_path(@concert), method: :delete,
+                  data: { turbo_confirm: t(".withdraw_confirm") } %>
+  <% end %>
+<% elsif policy(@registration).create? %>
+  <% if @concert.full? %>
+    <p class="concert__notice"><%= t(".full") %></p>
+  <% else %>
+    <%= button_to t(".register"), concert_registration_path(@concert) %>
+  <% end %>
+<% end %>
+
+<%# Affordances only. Every one of these is enforced again on the server. The section asks the
+    role question, not one of the record rules below it. %>
+<% if policy(Concert).create? %>
+  <h2><%= t(".management_heading") %></h2>
+
+  <p>
+    <% if policy(@concert).update? %>
+      <%= link_to t(".edit"), edit_concert_path(@concert) %>
+    <% end %>
+    <%= link_to t(".participants"), concert_participants_path(@concert) %>
+  </p>
+
+  <% if policy(@concert).publish? %>
+    <%= button_to t(".publish"), concert_publication_path(@concert) %>
+  <% end %>
+
+  <% if policy(@concert).cancel? %>
+    <%= button_to t(".cancel"), concert_cancellation_path(@concert),
+                  data: { turbo_confirm: t(".cancel_confirm") } %>
+  <% end %>
+
+  <% if policy(@concert).destroy? %>
+    <%= button_to t(".destroy"), @concert, method: :delete,
+                  data: { turbo_confirm: t(".destroy_confirm") } %>
+  <% end %>
+<% end %>
+
+<p><%= link_to t(".back"), concerts_path %></p>

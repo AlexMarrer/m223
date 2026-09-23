@@ -19,8 +19,8 @@ module M223
     # The UI is German; code and identifiers stay English.
     config.i18n.default_locale = :de
 
-    # Monday is the first day of the week, Sunday the last. This is the Rails default;
-    # pinned explicitly because task 6 groups concerts by week.
+    # Monday is the first day of the week, Sunday the last. This is the Rails default; pinned
+    # explicitly because the German date output relies on it.
     config.beginning_of_week = :monday
 
     # Render a field with errors exactly as written, without ActionView's field_with_errors

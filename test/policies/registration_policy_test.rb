@@ -13,6 +13,12 @@ class RegistrationPolicyTest < ActiveSupport::TestCase
     Registration.new(user: for_user, concert: concert)
   end
 
+  test "everyone may open their own registration list" do
+    [ @user, @organizer, @admin ].each do |actor|
+      assert RegistrationPolicy.new(actor, Registration).index?
+    end
+  end
+
   test "every role may register for an upcoming published concert" do
     [ @user, @organizer, @admin ].each do |actor|
       assert RegistrationPolicy.new(actor, registration(for_user: actor)).create?
