@@ -175,6 +175,41 @@ class ActivityLoggingTest < ActiveSupport::TestCase
     assert_equal 0, Activity.count
   end
 
+  test "a failing activity rolls back the Storno" do
+    concert = published_concert
+    registration = concert.register(@participant)
+
+    with_failing_activities(concert) do
+      assert_raises(ActiveRecord::RecordInvalid) { registration.withdraw }
+    end
+
+    assert Registration.exists?(registration.id), "the cancelled seat has to come back"
+    assert_equal 1, concert.reload.registrations.count
+    assert_equal 1, Activity.count, "only the registration of the setup may remain"
+  end
+
+  test "a failing activity rolls back the publication" do
+    concert = Concert.create!(concert_attributes(description: "Beschreibung", setlist: "Lied eins"))
+
+    with_failing_activities(concert) do
+      assert_raises(ActiveRecord::RecordInvalid) { concert.publish(@organizer) }
+    end
+
+    assert concert.reload.draft?
+    assert_equal 0, Activity.count
+  end
+
+  test "a failing activity rolls back the Absage" do
+    concert = published_concert
+
+    with_failing_activities(concert) do
+      assert_raises(ActiveRecord::RecordInvalid) { concert.cancel(@organizer) }
+    end
+
+    assert concert.reload.published?
+    assert_equal 0, Activity.count
+  end
+
   private
     def published_concert(**attributes)
       Concert.create!(published_concert_attributes(**attributes))

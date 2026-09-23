@@ -70,6 +70,10 @@ de:
         created_at: "Zeitpunkt"
         details: "Änderungen"
     errors:
+      # Message of ActiveRecord::RecordInvalid itself. Rails ships no German for it, and with
+      # raise_on_missing_translations the test suite trips over that.
+      messages:
+        record_invalid: "Validierung fehlgeschlagen: %{errors}"
       models:
         concert:
           attributes:

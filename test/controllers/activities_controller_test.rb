@@ -47,6 +47,17 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                   text: /#{Regexp.escape(Concert.human_attribute_name(:starts_at))}: .* → #{Regexp.escape(I18n.l(new_start, format: :short))}/
   end
 
+  test "a field the concert did not have before is shown as a dash" do
+    @concert.apply_changes({ playlist_url: "https://example.com/playlist" }, actor: users(:organizer))
+    sign_in_as users(:organizer)
+
+    get activities_path
+
+    assert_select ".activity-list__change",
+                  text: "#{Concert.human_attribute_name(:playlist_url)}: " \
+                        "#{I18n.t('activities.blank')} → https://example.com/playlist"
+  end
+
   test "a participant may not open the feed" do
     sign_in_as users(:one)
 

@@ -31,6 +31,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_empty cookies[:session_id]
   end
 
+  test "destroy ends the session and closes the application again" do
+    user = users(:one)
+    sign_in_as user
+
+    assert_difference -> { user.sessions.count }, -1 do
+      delete session_path
+    end
+
+    # The cookie alone says nothing: the session record is what the next request is checked
+    # against, so the protected page has to be closed afterwards.
+    get concerts_path
+    assert_redirected_to new_session_path
+  end
+
   test "new offers the registration link and German labels" do
     get new_session_path
 
