@@ -63,6 +63,12 @@ de:
         user: "Teilnehmer"
         concert: "Konzert"
         created_at: "Anmeldezeitpunkt"
+      activity:
+        action: "Aktion"
+        actor: "Ausgeführt von"
+        concert: "Konzert"
+        created_at: "Zeitpunkt"
+        details: "Änderungen"
     errors:
       models:
         concert:
@@ -105,6 +111,22 @@ de:
     concerts: "Konzerte"
     my_registrations: "Meine Anmeldungen"
     user_management: "Benutzerverwaltung"
+    activities: "Aktivitäten"
+
+  activities:
+    # Stands in for a value a concert did not have before or does not have any more.
+    blank: "–"
+    # The action names of docs/datenmodell.md as the feed shows them.
+    actions:
+      registered: "Anmeldung"
+      cancelled_registration: "Stornierung"
+      published: "Veröffentlichung"
+      updated: "Änderung"
+      cancelled_concert: "Absage"
+    index:
+      title: "Aktivitäten"
+      heading: "Aktivitäten"
+      empty: "Es wurden noch keine Aktivitäten protokolliert."
 
   concerts:
     # Shared by the listing and the detail screen, so neither borrows the other's key.

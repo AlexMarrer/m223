@@ -74,7 +74,7 @@ class RegistrationTest < ActiveSupport::TestCase
   test "withdraw is rejected once the concert is cancelled or has started" do
     concert = Concert.create!(published_concert_attributes)
     cancelled_registration = concert.register(users(:one))
-    concert.cancel
+    concert.cancel(users(:organizer))
 
     assert_not cancelled_registration.withdraw
     assert Registration.exists?(cancelled_registration.id)

@@ -217,14 +217,14 @@ class ConcertTest < ActiveSupport::TestCase
   test "publishes a draft" do
     concert = Concert.create!(concert_attributes(description: "Beschreibung", setlist: "Song"))
 
-    assert concert.publish
+    assert concert.publish(users(:organizer))
     assert concert.reload.published?
   end
 
   test "rejects publishing without a description or a setlist" do
     concert = Concert.create!(concert_attributes)
 
-    assert_not concert.publish
+    assert_not concert.publish(users(:organizer))
     assert concert.reload.draft?
     assert_includes concert.errors.attribute_names, :description
     assert_includes concert.errors.attribute_names, :setlist
@@ -236,7 +236,7 @@ class ConcertTest < ActiveSupport::TestCase
                                                  starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
 
     [ published, started ].each do |concert|
-      assert_not concert.publish
+      assert_not concert.publish(users(:organizer))
       assert_includes concert.errors.full_messages,
                       I18n.t("activerecord.errors.models.concert.attributes.base.not_publishable")
     end
@@ -246,7 +246,7 @@ class ConcertTest < ActiveSupport::TestCase
     concert = Concert.create!(published_concert_attributes)
     concert.register(users(:one))
 
-    assert concert.cancel
+    assert concert.cancel(users(:organizer))
     assert concert.reload.cancelled?
     assert_equal 1, concert.registrations.count
   end
@@ -256,7 +256,7 @@ class ConcertTest < ActiveSupport::TestCase
     started = Concert.create!(published_concert_attributes(starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
 
     [ draft, started ].each do |concert|
-      assert_not concert.cancel
+      assert_not concert.cancel(users(:organizer))
       assert_includes concert.errors.full_messages,
                       I18n.t("activerecord.errors.models.concert.attributes.base.not_cancellable")
     end
@@ -267,7 +267,7 @@ class ConcertTest < ActiveSupport::TestCase
     concert.register(users(:one))
     concert.register(users(:two))
 
-    assert_not concert.apply_changes(capacity: 1)
+    assert_not concert.apply_changes({ capacity: 1 }, actor: users(:organizer))
     assert_includes concert.errors.attribute_names, :capacity
     assert_equal 2, concert.reload.capacity
   end
@@ -276,16 +276,16 @@ class ConcertTest < ActiveSupport::TestCase
     concert = Concert.create!(published_concert_attributes(capacity: 2))
     concert.register(users(:one))
 
-    assert concert.apply_changes(capacity: 1)
+    assert concert.apply_changes({ capacity: 1 }, actor: users(:organizer))
     assert_equal 1, concert.reload.capacity
   end
 
   test "rejects a change based on a stale version" do
     concert = Concert.create!(concert_attributes)
     stale = Concert.find(concert.id)
-    concert.apply_changes(title: "Neuer Titel")
+    concert.apply_changes({ title: "Neuer Titel" }, actor: users(:organizer))
 
-    assert_raises(ActiveRecord::StaleObjectError) { stale.apply_changes(title: "Konkurrierender Titel") }
+    assert_raises(ActiveRecord::StaleObjectError) { stale.apply_changes({ title: "Konkurrierender Titel" }, actor: users(:organizer)) }
     assert_equal "Neuer Titel", concert.reload.title
   end
 

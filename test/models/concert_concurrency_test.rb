@@ -8,8 +8,10 @@ class ConcertConcurrencyTest < ActiveSupport::TestCase
   # duration and let the second attempt wait for something that never commits.
   self.use_transactional_tests = false
 
-  # There are no concert or registration fixtures, so the rows created here are the only ones.
+  # There are no concert, registration or activity fixtures, so the rows created here are the
+  # only ones. Activities reference concerts, so they go first.
   teardown do
+    Activity.delete_all
     Registration.delete_all
     Concert.delete_all
   end
@@ -33,7 +35,7 @@ class ConcertConcurrencyTest < ActiveSupport::TestCase
       fresh = Concert.find(concert.id)
 
       if operation == :reduce_capacity
-        fresh.apply_changes(capacity: 1)
+        fresh.apply_changes({ capacity: 1 }, actor: users(:organizer))
       else
         fresh.register(users(:two)).persisted?
       end

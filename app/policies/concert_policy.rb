@@ -32,8 +32,10 @@ class ConcertPolicy < ApplicationPolicy
     manages_concerts?
   end
 
+  # A cancelled concert stays as it was: docs/spec/PROJECT.md keeps it, and its registrations,
+  # as history.
   def update?
-    manages_concerts? && !record.started?
+    manages_concerts? && !record.cancelled? && !record.started?
   end
 
   def destroy?

@@ -3,7 +3,7 @@ class Concerts::CancellationsController < Concerts::BaseController
   def create
     authorize @concert, :cancel?
 
-    if @concert.cancel
+    if @concert.cancel(Current.user)
       redirect_to @concert, notice: t(".cancelled")
     else
       redirect_to @concert, alert: @concert.errors.full_messages.to_sentence

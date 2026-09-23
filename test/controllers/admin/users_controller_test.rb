@@ -86,7 +86,11 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "update changes the role of another user" do
-    patch admin_user_path(@target), params: { user: { name: @target.name, role: "organizer" } }
+    # User management is deliberately not part of the activity feed: every activity belongs to a
+    # concert. See docs/datenmodell.md, section "ACTIVITY".
+    assert_no_difference -> { Activity.count } do
+      patch admin_user_path(@target), params: { user: { name: @target.name, role: "organizer" } }
+    end
 
     assert_redirected_to admin_users_path
     assert_equal "organizer", @target.reload.role

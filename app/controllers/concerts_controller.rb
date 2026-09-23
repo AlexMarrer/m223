@@ -40,7 +40,7 @@ class ConcertsController < ApplicationController
   end
 
   def update
-    if @concert.apply_changes(concert_params)
+    if @concert.apply_changes(concert_params, actor: Current.user)
       redirect_to @concert, notice: t(".updated")
     else
       render :edit, status: :unprocessable_content

@@ -22,15 +22,28 @@ class ActivityTest < ActiveSupport::TestCase
     assert_includes activity.errors.attribute_names, :action
   end
 
-  test "stores optional details" do
+  test "accepts only the actions of the data model" do
+    activity = Activity.new(actor: users(:organizer), concert: @concert)
+
+    Activity.actions.each_key do |action|
+      activity.action = action
+      assert activity.valid?, "#{action} has to be a valid action"
+    end
+
+    activity.action = "deleted"
+    assert_not activity.valid?
+    assert_includes activity.errors.attribute_names, :action
+  end
+
+  test "stores optional details as old and new values" do
     activity = Activity.create!(
       actor: users(:organizer),
       concert: @concert,
       action: "updated",
-      details: '{"capacity":{"old":100,"new":80}}'
+      details: { "capacity" => { "old" => 100, "new" => 80 } }
     )
 
-    assert_equal '{"capacity":{"old":100,"new":80}}', activity.reload.details
+    assert_equal({ "capacity" => { "old" => 100, "new" => 80 } }, activity.reload.details)
   end
 
   test "records when it happened" do

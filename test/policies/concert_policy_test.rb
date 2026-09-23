@@ -89,6 +89,13 @@ class ConcertPolicyTest < ActiveSupport::TestCase
     assert_not ConcertPolicy.new(@organizer, draft).cancel?
   end
 
+  test "a cancelled concert is history and no longer editable" do
+    assert_not ConcertPolicy.new(@organizer, concert(status: :cancelled)).update?
+    assert_not ConcertPolicy.new(@admin, concert(status: :cancelled)).update?
+    assert ConcertPolicy.new(@organizer, concert).update?
+    assert ConcertPolicy.new(@organizer, concert(status: :draft)).update?
+  end
+
   test "a started concert can no longer be edited, published or cancelled" do
     started = concert(starts_at: 1.hour.ago)
     started_draft = concert(status: :draft, starts_at: 1.hour.ago)

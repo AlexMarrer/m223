@@ -119,10 +119,26 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Neuer Titel", @concert.reload.title
   end
 
+  test "a cancelled concert stays as it is and can no longer be edited" do
+    @concert.cancel(users(:organizer))
+    sign_in_as users(:organizer)
+
+    get edit_concert_path(@concert)
+    assert_redirected_to root_url
+
+    patch concert_path(@concert), params: {
+      concert: { title: "Nachträglich geändert", lock_version: @concert.lock_version }
+    }
+
+    assert_redirected_to root_url
+    assert_equal I18n.t("authorization.denied"), flash[:alert]
+    assert_equal "Testkonzert", @concert.reload.title
+  end
+
   test "a stale edit is rejected and keeps the submitted values" do
     sign_in_as users(:organizer)
     stale_version = @concert.lock_version
-    @concert.apply_changes(title: "Zwischenzeitlich geändert")
+    @concert.apply_changes({ title: "Zwischenzeitlich geändert" }, actor: users(:organizer))
 
     patch concert_path(@concert), params: {
       concert: { title: "Konkurrierender Titel", lock_version: stale_version }

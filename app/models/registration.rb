@@ -13,7 +13,7 @@ class Registration < ApplicationRecord
         concert.reload
 
         if concert.open_for_registration?
-          destroy
+          destroy && log_cancellation
         else
           errors.add(:base, :closed)
           false
@@ -21,4 +21,12 @@ class Registration < ApplicationRecord
       end
     end
   end
+
+  private
+    # Inside the transaction above, so a failing log takes the cancellation with it. Only the
+    # participant themselves may cancel, which is why the actor is the registration's own user.
+    def log_cancellation
+      concert.activities.create!(actor: user, action: :cancelled_registration)
+      true
+    end
 end

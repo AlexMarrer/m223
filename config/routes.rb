@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   resources :registrations, only: :index
 
+  # S14. The feed is read-only and covers every concert, so it hangs off the root and not off a
+  # single concert.
+  resources :activities, only: :index
+
   resource :profile, only: %i[ show update ]
   resource :password, only: %i[ edit update ]
   resource :email_change, only: %i[ new create ]

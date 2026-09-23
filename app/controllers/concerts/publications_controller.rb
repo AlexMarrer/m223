@@ -3,7 +3,7 @@ class Concerts::PublicationsController < Concerts::BaseController
   def create
     authorize @concert, :publish?
 
-    if @concert.publish
+    if @concert.publish(Current.user)
       redirect_to @concert, notice: t(".published")
     else
       # A draft may be saved without a description and a setlist, but not published without

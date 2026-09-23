@@ -1,0 +1,18 @@
+.activity-list {
+  border-collapse: collapse;
+}
+
+.activity-list__header {
+  text-align: left;
+  padding: 0.25rem 1rem 0.25rem 0;
+}
+
+.activity-list__cell {
+  padding: 0.25rem 1rem 0.25rem 0;
+  vertical-align: top;
+}
+
+.activity-list__changes {
+  margin: 0;
+  padding-left: 1rem;
+}

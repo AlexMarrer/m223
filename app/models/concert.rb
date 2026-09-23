@@ -1,4 +1,8 @@
 class Concert < ApplicationRecord
+  # The fields the edit form offers, and with that the fields an "updated" activity reports.
+  # lock_version and updated_at are bookkeeping, and a status change is an action of its own.
+  LOGGED_ATTRIBUTES = %w[ title description setlist playlist_url capacity starts_at ends_at ].freeze
+
   belongs_to :creator, class_name: "User"
 
   # Registrations and activities are history and are never deleted with the concert. Only drafts
@@ -58,7 +62,7 @@ class Concert < ApplicationRecord
         elsif full?
           registration.errors.add(:base, :full)
         else
-          registration.save
+          registration.save && log(user, :registered)
         end
       end
     rescue ActiveRecord::RecordNotUnique
@@ -72,10 +76,10 @@ class Concert < ApplicationRecord
 
   # Rejected when the concert is no longer a draft, has started, or still lacks the description
   # or setlist that every published concert needs.
-  def publish
+  def publish(actor)
     protected_by_transaction do
       if draft? && !started?
-        update(status: :published)
+        update(status: :published) && log(actor, :published)
       else
         errors.add(:base, :not_publishable)
         false
@@ -85,10 +89,10 @@ class Concert < ApplicationRecord
 
   # Calls the concert off, which is the Absage and never the Storno of a single registration.
   # The registrations are kept: they are the history of who had signed up.
-  def cancel
+  def cancel(actor)
     protected_by_transaction do
       if published? && !started?
-        update(status: :cancelled)
+        update(status: :cancelled) && log(actor, :cancelled_concert)
       else
         errors.add(:base, :not_cancellable)
         false
@@ -102,11 +106,36 @@ class Concert < ApplicationRecord
   #
   # Unlike the other operations this one must not reload: the caller's lock_version comes from
   # the submitted form and is exactly what the stale check compares against.
-  def apply_changes(attributes)
-    transaction { self.class.uncached { update(attributes) } }
+  def apply_changes(attributes, actor:)
+    transaction do
+      # Read before the update: the form cannot submit a status, and deciding afterwards would
+      # depend on that silently. A cancelled concert is history and never reaches this method —
+      # ConcertPolicy#update? stops it.
+      was_published = published?
+      saved = self.class.uncached { update(attributes) }
+      changes = logged_changes
+
+      log(actor, :updated, changes) if saved && was_published && changes.any?
+
+      saved
+    end
   end
 
   private
+    # Every logged operation writes its activity inside the transaction it already runs in, so a
+    # failing log takes the business change with it. create! and not create: the record is built
+    # entirely from code, so a failure here is a bug and must not be swallowed.
+    def log(actor, action, details = nil)
+      activities.create!(actor: actor, action: action, details: details)
+      true
+    end
+
+    # Empty for a no-op update: Rails writes nothing then, so there is nothing to report.
+    def logged_changes
+      saved_changes.slice(*LOGGED_ATTRIBUTES)
+                   .transform_values { |(old_value, new_value)| { "old" => old_value, "new" => new_value } }
+    end
+
     # The protected path from docs/datenmodell.md, section 6. SQLite opens the transaction with
     # BEGIN IMMEDIATE, so concurrent writers serialize and the state read here is the state the
     # write is based on.

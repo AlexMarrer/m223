@@ -31,6 +31,9 @@
           <%= link_to t("layout.concerts"), concerts_path %>
           <%= link_to t("layout.my_registrations"), registrations_path %>
           <%= link_to t("layout.profile"), profile_path %>
+          <% if policy(Activity).index? %>
+            <%= link_to t("layout.activities"), activities_path %>
+          <% end %>
           <% if policy(User).manage? %>
             <%= link_to t("layout.user_management"), admin_users_path %>
           <% end %>

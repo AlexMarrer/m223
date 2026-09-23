@@ -1,0 +1,40 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<% if @activities.any? %>
+  <table class="activity-list">
+    <thead>
+      <tr>
+        <th class="activity-list__header"><%= Activity.human_attribute_name(:created_at) %></th>
+        <th class="activity-list__header"><%= Activity.human_attribute_name(:action) %></th>
+        <th class="activity-list__header"><%= Activity.human_attribute_name(:concert) %></th>
+        <th class="activity-list__header"><%= Activity.human_attribute_name(:actor) %></th>
+        <th class="activity-list__header"><%= Activity.human_attribute_name(:details) %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @activities.each do |activity| %>
+        <tr>
+          <td class="activity-list__cell"><%= l activity.created_at, format: :short %></td>
+          <td class="activity-list__cell"><%= t("activities.actions.#{activity.action}") %></td>
+          <td class="activity-list__cell"><%= link_to activity.concert.title, activity.concert %></td>
+          <td class="activity-list__cell"><%= activity.actor.name %></td>
+          <td class="activity-list__cell">
+            <% lines = activity_detail_lines(activity) %>
+            <% if lines.any? %>
+              <ul class="activity-list__changes">
+                <% lines.each do |line| %>
+                  <li class="activity-list__change"><%= line %></li>
+                <% end %>
+              </ul>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><%= t(".empty") %></p>
+<% end %>
