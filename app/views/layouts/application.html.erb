@@ -24,23 +24,24 @@
   </head>
 
   <body>
-    <header>
-      <nav>
-        <%= link_to t("layout.brand"), root_path %>
+    <header class="site-header">
+      <nav class="site-header__nav">
+        <%= link_to t("layout.brand"), root_path, class: "site-header__brand" %>
         <% if authenticated? %>
-          <%= link_to t("layout.concerts"), concerts_path %>
-          <%= link_to t("layout.my_registrations"), registrations_path %>
-          <%= link_to t("layout.profile"), profile_path %>
+          <%= link_to t("layout.concerts"), concerts_path, class: "site-header__link" %>
+          <%= link_to t("layout.my_registrations"), registrations_path, class: "site-header__link" %>
+          <%= link_to t("layout.profile"), profile_path, class: "site-header__link" %>
           <% if policy(Activity).index? %>
-            <%= link_to t("layout.activities"), activities_path %>
+            <%= link_to t("layout.activities"), activities_path, class: "site-header__link" %>
           <% end %>
           <% if policy(User).manage? %>
-            <%= link_to t("layout.user_management"), admin_users_path %>
+            <%= link_to t("layout.user_management"), admin_users_path, class: "site-header__link" %>
           <% end %>
-          <%= button_to t("layout.sign_out"), session_path, method: :delete %>
+          <%= button_to t("layout.sign_out"), session_path, method: :delete,
+                        form_class: "site-header__sign-out", class: "site-header__sign-out-button" %>
         <% else %>
-          <%= link_to t("layout.sign_in"), new_session_path %>
-          <%= link_to t("layout.sign_up"), new_user_path %>
+          <%= link_to t("layout.sign_in"), new_session_path, class: "site-header__link site-header__link--end" %>
+          <%= link_to t("layout.sign_up"), new_user_path, class: "site-header__link" %>
         <% end %>
       </nav>
     </header>

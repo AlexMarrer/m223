@@ -1,11 +1,18 @@
 .flash {
-  margin: 0.5rem 0;
+  box-sizing: border-box;
+  width: min(57rem, 100% - 3rem);
+  margin: 1rem auto 0;
+  padding: 0.75rem 1rem;
+  border-left: 0.25rem solid;
+  border-radius: 0.375rem;
 }
 
 .flash--alert {
+  background: #fdecee;
   color: #b00020;
 }
 
 .flash--notice {
+  background: #e8f5ea;
   color: #00701a;
 }
