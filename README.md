@@ -31,6 +31,12 @@ lassen sich jederzeit mit `bin/setup --reset --skip-server` neu aufsetzen.
 
 Bestätigungslinks für den E-Mail-Wechsel werden in der Entwicklung im Log ausgegeben.
 
+Die Anwendung immer über `http://localhost:3000` öffnen, nicht über `127.0.0.1:3000`. Die
+Bestätigungslinks zeigen auf `localhost`, und der Browser führt für beide Adressen getrennte
+Anmeldungen. Wer sich unter `127.0.0.1` anmeldet und den Link öffnet, landet danach auf dem
+Profil des Kontos, das unter `localhost` angemeldet ist, oder auf der Anmeldeseite. Die Adresse
+wird trotzdem korrekt bestätigt.
+
 ## Demo-Konten
 
 Alle Konten haben das Passwort `eventdesk2026!`.
