@@ -10,11 +10,11 @@ Applikation der Dokumentation entspricht — Code und Antrag müssen am Ende üb
 
 ## 1. Kopfdaten
 
-| Feld | alt | neu |
-|---|---|---|
-| Version | 1.5 | 1.6 |
-| Datum | 18.09.2026 | _Datum der Überarbeitung_ |
-| Status | Zur Beurteilung | Zur Beurteilung |
+| Feld    | alt             | neu             |
+| ------- | --------------- | --------------- |
+| Version | 1.5             | 1.6             |
+| Datum   | 18.09.2026      | 24.09.2026      |
+| Status  | Zur Beurteilung | Zur Beurteilung |
 
 Optional eine Änderungszeile ergänzen:
 
@@ -31,31 +31,31 @@ Begriff und kollidiert mit der Programmierbedeutung des Wortes. `Concert` ist de
 domänenspezifische Fachbegriff (Bewertungskriterium „Domänenspezifische Fachbegriffe verwendet").
 
 **Wichtig:** Der Produktname **EventDesk bleibt unverändert**. Nur die Entität wird umbenannt.
-In Word also *nicht* blind „Alle ersetzen" über das ganze Dokument laufen lassen.
+In Word also _nicht_ blind „Alle ersetzen" über das ganze Dokument laufen lassen.
 
 Die deutschen Fliesstexte sprechen ohnehin von „Konzert" und bleiben unverändert.
 Betroffen sind nur die technischen Bezeichner:
 
 ### Abschnitt 3 — Gleichzeitige Anmeldungen
 
-| alt | neu |
-|---|---|
+| alt                                                                                | neu                                                                                  |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | `Event.transaction` verwendet im SQLite-Adapter von Rails 8.1 den IMMEDIATE-Modus. | `Concert.transaction` verwendet im SQLite-Adapter von Rails 8.1 den IMMEDIATE-Modus. |
 
 ### Abschnitt 4 — Datenmodell, Einleitungstext
 
-| alt | neu |
-|---|---|
+| alt                                                                                                                                                                                                                | neu                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Das fachliche Datenmodell besteht aus vier Entitäten. **Event** steht für ein Konzert. **Registration** verbindet Benutzer und Konzerte. **Activity** protokolliert die Aktionen eines Benutzers an einem Konzert. | Das fachliche Datenmodell besteht aus vier Entitäten. **Concert** steht für ein Konzert. **Registration** verbindet Benutzer und Konzerte. **Activity** protokolliert die Aktionen eines Benutzers an einem Konzert. |
 
 ### Abschnitt 4 — ER-Diagramm (Grafik neu erzeugen)
 
-| alt | neu |
-|---|---|
-| Entitätsbox `EVENT Konzert` | `CONCERT` |
-| `REGISTRATION` → `FK event_id` | `FK concert_id` |
+| alt                                          | neu                           |
+| -------------------------------------------- | ----------------------------- |
+| Entitätsbox `EVENT Konzert`                  | `CONCERT`                     |
+| `REGISTRATION` → `FK event_id`               | `FK concert_id`               |
 | `REGISTRATION` → `UNIQUE(user_id, event_id)` | `UNIQUE(user_id, concert_id)` |
-| `ACTIVITY` → `FK event_id` | `FK concert_id` |
+| `ACTIVITY` → `FK event_id`                   | `FK concert_id`               |
 
 Der Zusatz „Konzert" in der Entitätsbox entfällt, weil der Name jetzt selbsterklärend ist.
 
@@ -63,11 +63,11 @@ Der Zusatz „Konzert" in der Entitätsbox entfällt, weil der Name jetzt selbst
 
 Diese wurden geprüft und bewusst **nicht** geändert:
 
-| Name | Begründung |
-|---|---|
-| `Registration` | Eine Konzertanmeldung umfasst keine Zahlung, kein Ticket und keine Sitzplatzbuchung. `Booking` wäre irreführend. |
-| `creator_id` | Ein Konzert kann von einem Organisator *oder* einem Admin erstellt werden. `organizer_id` würde eine Rolle implizieren, die nicht zwingend zutrifft. |
-| `Activity` | Entspricht exakt dem UI-Begriff „Aktivitäten" auf Screen S14. |
+| Name           | Begründung                                                                                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Registration` | Eine Konzertanmeldung umfasst keine Zahlung, kein Ticket und keine Sitzplatzbuchung. `Booking` wäre irreführend.                                     |
+| `creator_id`   | Ein Konzert kann von einem Organisator _oder_ einem Admin erstellt werden. `organizer_id` würde eine Rolle implizieren, die nicht zwingend zutrifft. |
+| `Activity`     | Entspricht exakt dem UI-Begriff „Aktivitäten" auf Screen S14.                                                                                        |
 
 ---
 
@@ -80,19 +80,19 @@ Vier Stellen im Dokument gegen eine — die Tabelle ist die fehlerhafte Stelle.
 
 ### Alt
 
-| Rolle | Berechtigungen |
-|---|---|
-| Teilnehmer | Konzerte ansehen, sich selbst anmelden, eigene Anmeldungen stornieren und das eigene Profil bearbeiten |
-| Organisator | Zusätzlich alle Konzerte, Teilnehmerlisten und Aktivitäten **einsehen** |
-| Administratoren | Können zusätzlich Benutzer **und Konzerte** verwalten |
+| Rolle           | Berechtigungen                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------ |
+| Teilnehmer      | Konzerte ansehen, sich selbst anmelden, eigene Anmeldungen stornieren und das eigene Profil bearbeiten |
+| Organisator     | Zusätzlich alle Konzerte, Teilnehmerlisten und Aktivitäten **einsehen**                                |
+| Administratoren | Können zusätzlich Benutzer **und Konzerte** verwalten                                                  |
 
 ### Neu
 
-| Rolle | Berechtigungen |
-|---|---|
-| Teilnehmer | Konzerte ansehen, sich selbst anmelden, eigene Anmeldungen stornieren und das eigene Profil bearbeiten |
-| Organisator | Zusätzlich Konzerte verwalten (erstellen, bearbeiten, Entwürfe löschen, veröffentlichen, absagen) sowie Teilnehmerlisten und den Aktivitätsfeed einsehen |
-| Administrator | Zusätzlich Benutzer und Rollen verwalten |
+| Rolle         | Berechtigungen                                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Teilnehmer    | Konzerte ansehen, sich selbst anmelden, eigene Anmeldungen stornieren und das eigene Profil bearbeiten                                                   |
+| Organisator   | Zusätzlich Konzerte verwalten (erstellen, bearbeiten, Entwürfe löschen, veröffentlichen, absagen) sowie Teilnehmerlisten und den Aktivitätsfeed einsehen |
+| Administrator | Zusätzlich Benutzer und Rollen verwalten                                                                                                                 |
 
 Kernaussage: **Organisatoren verwalten Konzerte, aber niemals Benutzer. Nur Admins verwalten
 Benutzer und Rollen.** Niemand darf die eigene Rolle ändern.
@@ -106,9 +106,9 @@ ist jetzt konsistent mit der Tabelle.
 
 **Problem:** Die Wireframes verlangen es, das Datenmodell bildet es nicht ab.
 
-- S06 „Mein Profil": *„Aktuelle Adresse und ausstehende Änderung anzeigen"*
+- S06 „Mein Profil": _„Aktuelle Adresse und ausstehende Änderung anzeigen"_
 - S08 „E-Mail bestätigen": Bestätigungslink
-- S13 „Benutzer bearbeiten": *„Neue E-Mail muss bestätigt werden"*
+- S13 „Benutzer bearbeiten": _„Neue E-Mail muss bestätigt werden"_
 
 Die Entität `USER` im ER-Diagramm kennt aber nur `id, name, email_address, role, password_digest`.
 Es gibt kein Feld für die noch unbestätigte Adresse. Der Antrag schiebt das mit
@@ -198,8 +198,8 @@ Das vollständige Glossar steht in `docs/EventDesk_Projektuebersicht.md`, Abschn
 Organisatoren zu. Das widerspricht F08, dem Folgesatz in Abschnitt 3 und der Anwendung:
 `UserPolicy#manage?` erlaubt die Benutzerverwaltung nur Admins.
 
-| alt | neu |
-|---|---|
+| alt                                                                          | neu                                                                                                                                |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | Verwaltung von Konzerten, Teilnehmerlisten und Benutzern durch Organisatoren | Verwaltung von Konzerten und Teilnehmerlisten durch Organisatoren und Admins, Verwaltung von Benutzern und Rollen nur durch Admins |
 
 ---
@@ -224,22 +224,22 @@ Nach dem ersten Absatz von Abschnitt 5 anfügen:
 
 ### Änderungen je Screen
 
-| Screen | alt | neu |
-|---|---|---|
-| S03 | Details → S04. Meine Anmeldungen → S05. Profil → S06. Abmelden → S01. Verwaltung → S09, nur für Organisatoren. | Details → S04. Meine Anmeldungen, Profil und Abmelden über die Navigation. Für Organisatoren und Admins ist S03 zugleich S09. |
-| S04 | Anmelden → S05. | Anmelden → S04 mit Bestätigung. |
-| S04 | Zurück → S03 oder S05 je nach Einstieg. | Zurück → S03. |
-| S05 | Stornieren → aktualisierte Liste, nur vor Beginn bei veröffentlichtem Konzert. Zurück → S03. | Stornieren → S04 mit Bestätigung, nur vor Beginn bei veröffentlichtem Konzert. Zurück über die Navigation. |
-| S06 | Eingabe: Name und neue E-Mail-Adresse. Rolle nur anzeigen. | Eingabe: Name. Anzeige: aktuelle und ausstehende E-Mail-Adresse, Rolle. |
-| S06 | Neue E-Mail → Link im Entwicklungslog für S08. Passwort ändern → S07. Zurück → S03. | E-Mail ändern → eigene Seite mit Eingabe der neuen Adresse, danach S06 und Link im Entwicklungslog für S08. Passwort ändern → S07. |
-| S09 | Anzeige: alle Konzerte, auch Entwürfe. | S09 ist die Konzertliste S03 in der Ansicht für Organisatoren und Admins. Anzeige: alle Konzerte, auch Entwürfe und vergangene. |
-| S09 | Neues Konzert oder bearbeiten → S10. Konzert öffnen → S04. Entwurf löschen → aktualisierte Liste. Benutzer → S12. Aktivitäten → S14. Zur Teilnehmeransicht → S03. | Neues Konzert oder bearbeiten → S10. Konzert öffnen → S04. Aktivitäten → S14 und, nur für Admins, Benutzerverwaltung → S12 über die Navigation. |
-| S10 | Entwurf speichern oder veröffentlichen → S04. | Speichern → S04. Ein neues Konzert ist zunächst ein Entwurf. Veröffentlicht wird auf S04. |
-| S04 für Organisatoren | Aktionen nach Konzertstatus: Bearbeiten → S10. Teilnehmerliste → S11. Veröffentlichtes Konzert vor Beginn absagen → S04 mit Status abgesagt. Zurück → S09. | Aktionen nach Konzertstatus: Bearbeiten → S10. Teilnehmerliste → S11. Entwurf veröffentlichen → S04. Entwurf löschen → S09. Veröffentlichtes Konzert vor Beginn absagen → S04 mit Status abgesagt. Zurück → S09. |
-| Zwischentitel vor S12 | – | Neuer Zwischentitel **Administratoren** mit dem Satz: „Admins nutzen zusätzlich die Benutzerverwaltung. Organisatoren und Teilnehmer erhalten bei einem direkten Zugriff eine Meldung über fehlende Berechtigungen." S12 und S13 unter diesen Titel verschieben. S14 bleibt bei den Organisatoren. |
-| S12 | Anzeige: alle Benutzer mit Name, E-Mail-Adresse und Rolle. Bearbeiten → S13. Zurück zur Verwaltung → S09. | Nur für Admins. Anzeige: alle Benutzer mit Name, E-Mail-Adresse und Rolle. Bearbeiten → S13. |
-| S13 | Eingabe: Name, neue E-Mail-Adresse und Rolle. Die eigene Rolle ist gesperrt. | Nur für Admins. Eingabe: Name und Rolle, die eigene Rolle ist gesperrt. Die neue E-Mail-Adresse hat ein eigenes Feld mit der Schaltfläche „Bestätigungslink senden". |
-| S14 | Konzert öffnen → S04. Zurück zur Verwaltung → S09. | Konzert öffnen → S04. Zurück über die Navigation. |
+| Screen                | alt                                                                                                                                                               | neu                                                                                                                                                                                                                                                                                                |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S03                   | Details → S04. Meine Anmeldungen → S05. Profil → S06. Abmelden → S01. Verwaltung → S09, nur für Organisatoren.                                                    | Details → S04. Meine Anmeldungen, Profil und Abmelden über die Navigation. Für Organisatoren und Admins ist S03 zugleich S09.                                                                                                                                                                      |
+| S04                   | Anmelden → S05.                                                                                                                                                   | Anmelden → S04 mit Bestätigung.                                                                                                                                                                                                                                                                    |
+| S04                   | Zurück → S03 oder S05 je nach Einstieg.                                                                                                                           | Zurück → S03.                                                                                                                                                                                                                                                                                      |
+| S05                   | Stornieren → aktualisierte Liste, nur vor Beginn bei veröffentlichtem Konzert. Zurück → S03.                                                                      | Stornieren → S04 mit Bestätigung, nur vor Beginn bei veröffentlichtem Konzert. Zurück über die Navigation.                                                                                                                                                                                         |
+| S06                   | Eingabe: Name und neue E-Mail-Adresse. Rolle nur anzeigen.                                                                                                        | Eingabe: Name. Anzeige: aktuelle und ausstehende E-Mail-Adresse, Rolle.                                                                                                                                                                                                                            |
+| S06                   | Neue E-Mail → Link im Entwicklungslog für S08. Passwort ändern → S07. Zurück → S03.                                                                               | E-Mail ändern → eigene Seite mit Eingabe der neuen Adresse, danach S06 und Link im Entwicklungslog für S08. Passwort ändern → S07.                                                                                                                                                                 |
+| S09                   | Anzeige: alle Konzerte, auch Entwürfe.                                                                                                                            | S09 ist die Konzertliste S03 in der Ansicht für Organisatoren und Admins. Anzeige: alle Konzerte, auch Entwürfe und vergangene.                                                                                                                                                                    |
+| S09                   | Neues Konzert oder bearbeiten → S10. Konzert öffnen → S04. Entwurf löschen → aktualisierte Liste. Benutzer → S12. Aktivitäten → S14. Zur Teilnehmeransicht → S03. | Neues Konzert oder bearbeiten → S10. Konzert öffnen → S04. Aktivitäten → S14 und, nur für Admins, Benutzerverwaltung → S12 über die Navigation.                                                                                                                                                    |
+| S10                   | Entwurf speichern oder veröffentlichen → S04.                                                                                                                     | Speichern → S04. Ein neues Konzert ist zunächst ein Entwurf. Veröffentlicht wird auf S04.                                                                                                                                                                                                          |
+| S04 für Organisatoren | Aktionen nach Konzertstatus: Bearbeiten → S10. Teilnehmerliste → S11. Veröffentlichtes Konzert vor Beginn absagen → S04 mit Status abgesagt. Zurück → S09.        | Aktionen nach Konzertstatus: Bearbeiten → S10. Teilnehmerliste → S11. Entwurf veröffentlichen → S04. Entwurf löschen → S09. Veröffentlichtes Konzert vor Beginn absagen → S04 mit Status abgesagt. Zurück → S09.                                                                                   |
+| Zwischentitel vor S12 | –                                                                                                                                                                 | Neuer Zwischentitel **Administratoren** mit dem Satz: „Admins nutzen zusätzlich die Benutzerverwaltung. Organisatoren und Teilnehmer erhalten bei einem direkten Zugriff eine Meldung über fehlende Berechtigungen." S12 und S13 unter diesen Titel verschieben. S14 bleibt bei den Organisatoren. |
+| S12                   | Anzeige: alle Benutzer mit Name, E-Mail-Adresse und Rolle. Bearbeiten → S13. Zurück zur Verwaltung → S09.                                                         | Nur für Admins. Anzeige: alle Benutzer mit Name, E-Mail-Adresse und Rolle. Bearbeiten → S13.                                                                                                                                                                                                       |
+| S13                   | Eingabe: Name, neue E-Mail-Adresse und Rolle. Die eigene Rolle ist gesperrt.                                                                                      | Nur für Admins. Eingabe: Name und Rolle, die eigene Rolle ist gesperrt. Die neue E-Mail-Adresse hat ein eigenes Feld mit der Schaltfläche „Bestätigungslink senden".                                                                                                                               |
+| S14                   | Konzert öffnen → S04. Zurück zur Verwaltung → S09.                                                                                                                | Konzert öffnen → S04. Zurück über die Navigation.                                                                                                                                                                                                                                                  |
 
 S01, S02, S07, S08 und S11 stimmen mit der Anwendung überein.
 
@@ -255,10 +255,10 @@ S01, S02, S07, S08 und S11 stimmen mit der Anwendung überein.
 
 ## 8a. Kleinere Präzisierungen in Abschnitt 2 und 3
 
-| Stelle | alt | neu |
-|---|---|---|
-| Abschnitt 3, Gleichzeitiges Bearbeiten | Hat ein anderer Organisator das Konzert bereits verändert, wird das Speichern abgewiesen. | Hat ein anderer Organisator oder Admin das Konzert bereits verändert, wird das Speichern abgewiesen. |
-| Abschnitt 2, letzter Satz „Geplante Prüfung" | Geprüfte Anforderungen und Ergebnisse stehen unter /docs, der Testbefehl im README. | Geprüfte Anforderungen und Ergebnisse stehen im Ordner docs/ des Code-ZIPs, der Testbefehl im README. |
+| Stelle                                       | alt                                                                                       | neu                                                                                                   |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Abschnitt 3, Gleichzeitiges Bearbeiten       | Hat ein anderer Organisator das Konzert bereits verändert, wird das Speichern abgewiesen. | Hat ein anderer Organisator oder Admin das Konzert bereits verändert, wird das Speichern abgewiesen.  |
+| Abschnitt 2, letzter Satz „Geplante Prüfung" | Geprüfte Anforderungen und Ergebnisse stehen unter /docs, der Testbefehl im README.       | Geprüfte Anforderungen und Ergebnisse stehen im Ordner docs/ des Code-ZIPs, der Testbefehl im README. |
 
 ---
 

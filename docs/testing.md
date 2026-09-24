@@ -46,10 +46,6 @@ Zwei Punkte sind bewusst gesetzt:
   prüft jeder View-Test nebenbei die Konvention aus `PROJECT.md`: deutscher Text steht in
   `config/locales/de.yml` und nirgends sonst.
 
-> Hinweis zu `de.yml`: Die Datei enthält denselben Schlüsselpfad mehrfach (zum Beispiel
-> `activerecord.errors`). YAML behält das letzte Vorkommen. Neue Schlüssel gehören deshalb in
-> den bestehenden Block, nicht in einen zweiten.
-
 ---
 
 ## 3. Abdeckung der Anforderungen

@@ -63,11 +63,13 @@ Mutationsprobe nachweist, dass der Kapazitätsschutz wirklich getestet ist: `doc
 
 ## Weitere Dokumentation
 
-Die Dokumentation liegt nicht im Repository, sondern im Abgabe-ZIP im Ordner `docs/`.
-`script/package_submission` erstellt das Abgabepaket mit diesem Ordner.
+Die Projektdokumentation liegt im Ordner `docs/`. Der Unterordner `docs/spec/` ist nicht im
+Repository, sondern nur im Abgabe-ZIP. `script/package_submission` erstellt das Abgabepaket mit
+dem ganzen Ordner.
 
 | Datei | Inhalt |
 |---|---|
+| `docs/dokumentation.md` | **Projektdokumentation** (Projektantrag 1.6): Anforderungen, Rollen, Datenmodell, Breadboards, Wireframes, Tests, erreichter Stand |
 | `docs/spec/PROJECT.md` | Fachliche Grundlagen, Rollen, Konventionen |
 | `docs/datenmodell.md` | Datentypen, Constraints, Nebenläufigkeit, ER-Diagramm |
 | `docs/testing.md` | Testkonzept, Abdeckung, manuelle Prüfliste |

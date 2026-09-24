@@ -1,7 +1,6 @@
 # EventDesk – Stand bei der Abgabe
 
-Stand: 23.09.2026. Grundlage ist der Projektantrag Version 1.5 mit den Änderungen aus
-`docs/Projektantrag-v1.6-Aenderungen.md`.
+Stand: 24.09.2026. Grundlage ist die Projektdokumentation Version 1.6 in `docs/dokumentation.md`.
 
 ---
 
@@ -26,12 +25,9 @@ Umgesetzt sind alle funktionalen Anforderungen F01–F10 und alle Qualitätsanfo
 
 - Sichtprüfung im Browser, `docs/testing.md` Abschnitt 7.2. Die Abläufe über HTTP
   (Abschnitt 7.1) sind geprüft.
-- Der Projektantrag ist noch nicht als Version 1.6 überarbeitet. Die Änderungsliste steht in
-  `docs/Projektantrag-v1.6-Aenderungen.md`. Das ER-Diagramm muss dafür aus
-  `docs/datenmodell.md` neu gerendert werden.
-- Dokumentation (Projektantrag 1.6) und Präsentation liegen noch nicht als PDF vor. Ohne sie
-  kann das Abgabe-ZIP nicht erstellt werden.
-- Die GitHub-CI bleibt offen, bis sie nach Commit und Push erfolgreich durchläuft.
+- Die Dokumentation (Projektantrag 1.6) liegt als `docs/dokumentation.md` vor, aber noch nicht
+  als PDF. Die Präsentation fehlt noch. Ohne beide PDFs kann das Abgabe-ZIP nicht erstellt
+  werden.
 
 ---
 
@@ -69,7 +65,9 @@ Alle Prüfungen am 23.09.2026 lokal ausgeführt (Ruby 4.0.6, Linux).
 | Sichtprüfung im Browser, `docs/testing.md` Abschnitt 7.2 | nicht durchgeführt |
 | `script/package_submission` | Code-ZIP mit README, 25 Testdateien und `docs/` samt Bild und PDF erstellt, ohne `config/master.key`, Datenbanken und Logs |
 
-Nicht ausgeführt: der GitHub-Lauf der CI und die Sichtprüfung im Browser.
+Die GitHub-CI läuft erfolgreich durch, zuletzt Lauf #20 am 24.09.2026 für Commit
+`2b44d64` mit allen Jobs (`scan_ruby`, `scan_js`, `lint`, `test`). Nicht ausgeführt: die
+Sichtprüfung im Browser.
 
 ### Korrektur der CI
 
@@ -109,9 +107,9 @@ script/package_submission pfad/zur/Dokumentation.pdf pfad/zur/Praesentation.pdf
 ```
 
 Das Skript legt in `tmp/abgabe/` zuerst `eventdesk-code.zip` an. Es enthält alle Dateien, die
-Git nicht ignoriert, und zusätzlich den ganzen Ordner `docs/`, der in `.gitignore` steht. Ein
-`git archive` würde `docs/` deshalb auslassen. Nur wenn beide PDFs vorhanden sind, entsteht
-danach `eventdesk-abgabe.zip` mit den zwei PDFs und dem Code-ZIP. Sonst nennt das Skript die
+Git nicht ignoriert, und zusätzlich den ganzen Ordner `docs/`. Dessen Unterordner wie
+`docs/spec/` stehen in `.gitignore`, ein `git archive` würde sie deshalb auslassen. Nur wenn
+beide PDFs vorhanden sind, entsteht danach `eventdesk-abgabe.zip` mit den zwei PDFs und dem Code-ZIP. Sonst nennt das Skript die
 fehlenden Dateien.
 
 Kontrolle:

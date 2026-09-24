@@ -314,10 +314,11 @@ Transaktion und schreibt erst danach:
 | Kapazität ändern | neue `capacity` darf nicht unter die zum Zeitpunkt des Schreibens gültige Belegung fallen |
 | Konzert absagen | Status und Belegung müssen gemeinsam konsistent bleiben, während parallel gebucht wird |
 
-Der Fehlerfall, den das verhindert: Ein Organisator reduziert die Kapazität von 100 auf 80,
-während gleichzeitig der 80. Platz gebucht wird. Ohne gemeinsame Serialisierung prüft die
-Kapazitätsänderung gegen 79 Anmeldungen, die Buchung gegen ein Limit von 100 — und das
-Konzert ist anschliessend überbucht, obwohl beide Operationen für sich korrekt aussahen.
+Der Fehlerfall, den das verhindert: Bei 80 Anmeldungen reduziert ein Organisator die Kapazität
+von 100 auf 80, während gleichzeitig der 81. Platz gebucht wird. Ohne gemeinsame Serialisierung
+prüft die Kapazitätsänderung gegen 80 Anmeldungen, die Buchung gegen ein Limit von 100 — und das
+Konzert hat anschliessend 81 Anmeldungen bei 80 Plätzen, obwohl beide Operationen für sich
+korrekt aussahen.
 
 Praktisch heisst das: Diese vier Operationen laufen über denselben transaktionalen Pfad und
 lesen `capacity` und die Anzahl Anmeldungen jeweils frisch innerhalb der Transaktion. Keine

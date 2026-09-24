@@ -3,8 +3,9 @@
 #
 #   script/package_submission [DOKUMENTATION.pdf] [PRAESENTATION.pdf]
 #
-# The code ZIP holds the working tree as git sees it, plus docs/. docs/ is ignored by git, so a
-# plain `git archive` would leave it out. The submission ZIP is only built when both PDFs exist.
+# The code ZIP holds the working tree as git sees it, plus docs/. git ignores the subfolders of
+# docs/, so a plain `git archive` would leave them out. The submission ZIP is only built when
+# both PDFs exist.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
