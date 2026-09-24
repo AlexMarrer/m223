@@ -600,9 +600,9 @@ scheitern fünf Tests. Nach dem Zurücksetzen läuft die Suite wieder ohne Fehle
 | F08 | `admin/users_controller_test`, `admin/email_changes_controller_test`, `user_policy_test`                                        |           16, 17           | erfüllt  |
 | F09 | `activity_logging_test`, `activities_controller_test`                                                                           |             13             | erfüllt  |
 | F10 | `concert_test`, `concerts_controller_test`                                                                                      |             15             | erfüllt  |
-| Q01 | `concert_concurrency_test`, Unique Index in `registration_test`                                                                 |            keine           | erfüllt  |
+| Q01 | `concert_concurrency_test`, Unique Index in `registration_test`                                                                 |           keine            | erfüllt  |
 | Q02 | Verweigerungstests in allen Controller-Tests, `policies/*_test`                                                                 |         9, 10, 17          | erfüllt  |
-| Q03 | `activity_logging_test`: Rollback-Test je Transaktionsklammer                                                                   |            keine           | erfüllt  |
+| Q03 | `activity_logging_test`: Rollback-Test je Transaktionsklammer                                                                   |           keine            | erfüllt  |
 | Q04 | `concert_test`, `registrations_controller_test`                                                                                 |           8, 14            | erfüllt  |
 | Q05 | `activity_logging_test`, `registration_test`                                                                                    |             13             | erfüllt  |
 
