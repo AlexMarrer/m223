@@ -97,6 +97,18 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to concert_url(concert)
   end
 
+  test "a time entered in the form is Swiss local time" do
+    sign_in_as users(:organizer)
+
+    post concerts_path, params: {
+      concert: concert_form_params(starts_at: "2030-07-01T20:00", ends_at: "2030-07-01T22:00")
+    }
+
+    concert = Concert.order(:created_at).last
+    assert_equal Time.utc(2030, 7, 1, 18), concert.starts_at
+    assert_equal "Europe/Zurich", concert.starts_at.time_zone.tzinfo.name
+  end
+
   test "create rejects invalid values and keeps the form" do
     sign_in_as users(:organizer)
 
