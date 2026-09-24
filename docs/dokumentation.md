@@ -539,7 +539,8 @@ Die Benutzerverwaltung (S12, S13) wird nur Admins angezeigt.
   behalten die Eingaben. Passwortfelder werden geleert.
 - Ein Bearbeitungskonflikt antwortet mit HTTP 409, siehe Abschnitt 6.
 - Eine Buchung, die nicht möglich ist, nennt den Grund: ausgebucht, bereits angemeldet, abgesagt
-  oder bereits begonnen.
+  oder bereits begonnen. Eine Stornierung, die eine parallele Anfrage schon ausgeführt hat, meldet
+  „Diese Anmeldung wurde bereits storniert." und wird nicht ein zweites Mal protokolliert.
 - Fehlende Berechtigungen und unbekannte Datensätze führen zu einer Meldung mit Rückweg, nie zu
   einer technischen Fehlerseite.
 - Der Playlist-Link akzeptiert nur `http://` und `https://`, damit kein `javascript:`-Link auf der
@@ -561,7 +562,7 @@ bin/rails test            # gesamte Testsuite
 
 ### Testkonzept
 
-Die Suite umfasst 253 Tests mit 807 Assertions in 25 Dateien, letzter Lauf ohne Fehler. Die CI auf
+Die Suite umfasst 256 Tests mit 819 Assertions in 25 Dateien, letzter Lauf ohne Fehler. Die CI auf
 GitHub führt bei jedem Push die Tests, RuboCop, Brakeman, `bundler-audit` und `importmap audit` aus.
 
 | Bereich          | Inhalt                                                                                                 |
@@ -603,7 +604,7 @@ scheitern fünf Tests. Nach dem Zurücksetzen läuft die Suite wieder ohne Fehle
 | Q02 | Verweigerungstests in allen Controller-Tests, `policies/*_test`                                                                 |         9, 10, 17          | erfüllt  |
 | Q03 | `activity_logging_test`: Rollback-Test je Transaktionsklammer                                                                   |            keine           | erfüllt  |
 | Q04 | `concert_test`, `registrations_controller_test`                                                                                 |           8, 14            | erfüllt  |
-| Q05 | `activity_logging_test`                                                                                                         |             13             | erfüllt  |
+| Q05 | `activity_logging_test`, `registration_test`                                                                                    |             13             | erfüllt  |
 
 Die manuelle Prüfung der Abläufe über HTTP ist mit 18 von 18 Punkten erfüllt. Einzelheiten, der
 Aufbau des Nebenläufigkeitstests und die Mutationsprobe stehen in `docs/testing.md`.
@@ -670,7 +671,7 @@ Diese Abweichungen sind in Version 1.6 bereits eingearbeitet.
 | `docs/abgabe-stand.md`                                 | Stand bei der Abgabe mit allen Prüfergebnissen und CI-Korrekturen                      |
 | `docs/Projektantrag_EventDesk_1-5-1.pdf`               | Genehmigter Projektantrag Version 1.5                                                  |
 | `docs/Projektantrag-v1.6-Aenderungen.md`               | Arbeitsliste der Änderungen von 1.5 zu 1.6                                             |
-| `docs/EventDesk_Projektuebersicht.md` und `docs/spec/` | Arbeitsgrundlage und Aufgabenspezifikationen aus der Umsetzung                         |
+| `docs/EventDesk_Projektuebersicht.md` und `docs/spec/` | Arbeitsgrundlage mit Aufgabenplan für Tag 3 bis 5 und Aufgabenspezifikationen          |
 
 **Einsatz von KI:** Die Umsetzung erfolgte mit Unterstützung von Claude Code. Für jede der acht
 Aufgaben wurde zuerst eine Spezifikation mit Akzeptanzkriterien erstellt und geprüft, erst danach

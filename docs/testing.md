@@ -20,7 +20,7 @@ bin/rails test test/models/concert_test.rb:158  # nur ein Test
 Es braucht keine Vorbereitung: Rails lädt das Testschema aus `db/schema.rb`, die Testdaten
 kommen aus `test/fixtures/users.yml`.
 
-Stand der letzten Ausführung (23.09.2026): **253 Tests, 807 Assertions, 0 Fehler.**
+Stand der letzten Ausführung (24.09.2026): **256 Tests, 819 Assertions, 0 Fehler.**
 
 Die Suite läuft parallel über alle Prozessorkerne. Tritt ein Fehler nur sporadisch auf, hilft
 `PARALLEL_WORKERS=1 bin/rails test` beim Eingrenzen.
@@ -134,7 +134,7 @@ Ergebnis (geprüft am 23.09.2026, damals 250 Tests): **5 Fehler von 250 Tests**,
 
 ### Danach
 
-`bin/rails test` muss wieder **0 Fehler** melden (aktuell 253 Tests) und `git diff` leer sein.
+`bin/rails test` muss wieder **0 Fehler** melden (aktuell 256 Tests) und `git diff` leer sein.
 
 ---
 

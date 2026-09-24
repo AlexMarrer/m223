@@ -120,6 +120,17 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".form-errors__item"
   end
 
+  test "a fractional capacity is rejected with a German message" do
+    sign_in_as users(:organizer)
+
+    assert_no_difference -> { Concert.count } do
+      post concerts_path, params: { concert: concert_form_params(capacity: "1.5") }
+    end
+
+    assert_response :unprocessable_content
+    assert_select ".form-errors__item", /muss eine ganze Zahl sein/
+  end
+
   test "an organizer edits a concert" do
     sign_in_as users(:organizer)
 

@@ -71,6 +71,21 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_not Registration.exists?(registration.id)
   end
 
+  # Two requests that loaded the same registration before either of them withdrew it.
+  test "a registration withdrawn twice is logged once" do
+    concert = Concert.create!(published_concert_attributes)
+    first = concert.register(users(:one))
+    second = Registration.find(first.id)
+
+    assert first.withdraw
+
+    assert_no_difference -> { Activity.count } do
+      assert_not second.withdraw
+    end
+    assert_equal [ I18n.t("activerecord.errors.models.registration.attributes.base.already_withdrawn") ],
+                 second.errors.full_messages
+  end
+
   test "withdraw is rejected once the concert is cancelled or has started" do
     concert = Concert.create!(published_concert_attributes)
     cancelled_registration = concert.register(users(:one))

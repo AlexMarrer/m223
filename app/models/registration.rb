@@ -12,11 +12,16 @@ class Registration < ApplicationRecord
       Concert.uncached do
         concert.reload
 
-        if concert.open_for_registration?
-          destroy && log_cancellation
-        else
+        if !concert.open_for_registration?
           errors.add(:base, :closed)
           false
+        elsif !self.class.exists?(id)
+          # A parallel request withdrew it first. destroy would still report success for the
+          # missing row, and the cancellation would be logged twice.
+          errors.add(:base, :already_withdrawn)
+          false
+        else
+          destroy && log_cancellation
         end
       end
     end

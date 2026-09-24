@@ -25,6 +25,13 @@ Die Aufgaben orientieren sich an der empfohlenen Reihenfolge des Unterrichts:
 7. Aktivitätsprotokoll implementieren
 8. Testing
 
+### Tag 5
+
+- Abschlussarbeiten: Fehler aus der Durchsicht beheben, Sichtprüfung im Browser
+- Dokumentation fertigstellen und als PDF exportieren
+- Präsentation mit Live-Demo vorbereiten und halten
+- Abgabepaket mit `script/package_submission` erstellen und abgeben
+
 ---
 
 # 2. Projektziel

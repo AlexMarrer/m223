@@ -31,6 +31,7 @@ de:
       too_long: "ist zu lang (höchstens %{count} Zeichen)"
       greater_than: "muss grösser als %{count} sein"
       not_a_number: "ist keine Zahl"
+      not_an_integer: "muss eine ganze Zahl sein"
       invalid: "ist nicht korrekt"
       unchanged: "ist bereits die aktuelle Adresse"
 
@@ -94,6 +95,7 @@ de:
               closed: "Für dieses Konzert sind keine Anmeldungen möglich."
               full: "Dieses Konzert ist bereits ausgebucht."
               duplicate: "Du bist für dieses Konzert bereits angemeldet."
+              already_withdrawn: "Diese Anmeldung wurde bereits storniert."
 
   # Flash messages for requests that were stopped before they reached their action.
   authorization:

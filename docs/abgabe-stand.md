@@ -25,9 +25,8 @@ Umgesetzt sind alle funktionalen Anforderungen F01–F10 und alle Qualitätsanfo
 
 - Sichtprüfung im Browser, `docs/testing.md` Abschnitt 7.2. Die Abläufe über HTTP
   (Abschnitt 7.1) sind geprüft.
-- Die Dokumentation (Projektantrag 1.6) liegt als `docs/dokumentation.md` vor, aber noch nicht
-  als PDF. Die Präsentation fehlt noch. Ohne beide PDFs kann das Abgabe-ZIP nicht erstellt
-  werden.
+- Die Präsentation fehlt noch. Ohne sie kann das Abgabe-ZIP nicht erstellt werden. Die
+  Dokumentation liegt als `docs/dokumentation.md` und `docs/dokumentation.pdf` vor.
 
 ---
 
@@ -51,12 +50,12 @@ Umgesetzt sind alle funktionalen Anforderungen F01–F10 und alle Qualitätsanfo
 
 ## 4. Durchgeführte Prüfungen
 
-Alle Prüfungen am 23.09.2026 lokal ausgeführt (Ruby 4.0.6, Linux).
+Prüfungen lokal ausgeführt (Ruby 4.0.6, Linux), am 23.09.2026 und die Testsuite erneut am 24.09.2026.
 
 | Prüfung | Ergebnis |
 |---|---|
-| `bin/rails test` | 253 Tests, 807 Assertions, 0 Fehler |
-| `bin/rails test` aus dem entpackten Code-ZIP ohne `config/master.key` | 253 Tests, 0 Fehler |
+| `bin/rails test` (24.09.2026) | 256 Tests, 819 Assertions, 0 Fehler |
+| `bin/rails test` aus dem entpackten Code-ZIP ohne `config/master.key` (23.09.2026) | 253 Tests, 0 Fehler |
 | `bin/brakeman`, `bin/bundler-audit`, `bin/importmap audit`, `bin/rubocop` | ohne Befund |
 | `bundle install` im Frozen-Modus wie in der CI | erfolgreich |
 | Fehlerprobe: Kapazitätsprüfung `elsif full?` entfernt (Stand mit 250 Tests) | 5 von 250 Tests scheitern, darunter `ConcertTest#test_rejects_a_registration_for_a_full_concert` und beide Nebenläufigkeitstests. Nach dem Zurücksetzen wieder 0 Fehler |
@@ -98,6 +97,21 @@ aktuelle Passwort nicht. `PasswordsController` wandelt den Wert jetzt immer in e
 so läuft die Prüfung in jedem Fall. Zwei neue Tests decken das fehlende Feld und `nil` ab. Ohne
 die Korrektur scheitern beide.
 
+### Doppelte Stornierung
+
+Luden zwei Anfragen dieselbe Anmeldung, bevor eine davon stornierte, protokollierten beide eine
+Stornierung. `destroy` meldet auch dann Erfolg, wenn die Zeile schon gelöscht ist. Das verletzte
+Q05. `Registration#withdraw` prüft jetzt innerhalb der Transaktion, ob die Anmeldung noch
+existiert. Die zweite Anfrage erhält „Diese Anmeldung wurde bereits storniert." und schreibt keine
+Aktivität. Ein neuer Test in `registration_test.rb` scheitert ohne die Korrektur.
+
+### Kapazität mit Nachkommastellen
+
+Eine direkte Anfrage mit der Kapazität `1.5` führte zu einem Fehler statt zu einer Meldung, weil
+die deutsche Übersetzung für `not_an_integer` fehlte. Sie ist in `de.yml` ergänzt: „Kapazität
+muss eine ganze Zahl sein". Ein neuer Request-Test in `concerts_controller_test.rb` scheitert ohne
+die Korrektur.
+
 ---
 
 ## 5. Abgabepaket
@@ -114,6 +128,6 @@ fehlenden Dateien.
 
 Kontrolle:
 
-- [ ] Dokumentation als PDF (Projektantrag 1.6): **fehlt noch**
+- [x] Dokumentation als PDF (Projektantrag 1.6): `docs/dokumentation.pdf`, nach jeder Änderung neu exportieren
 - [ ] Präsentation als PDF: **fehlt noch**
 - [x] Code-ZIP mit README, `test/` und `docs/` samt Bildern: mit dem Skript geprüft
