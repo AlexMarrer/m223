@@ -25,7 +25,7 @@ gem "pundit"
 
 # json 3 drops the positional options argument of JSON.parse that Rails still passes when reading
 # signed messages. 2.19.9 is the first release without CVE-2026-54696.
-gem "json", "~> 2.19", ">= 2.19.9"
+gem "json", "~> 3.0"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
