@@ -36,4 +36,15 @@ class RegistrationsController < ApplicationController
     def set_concert
       @concert = Concert.find(params[:concert_id])
     end
+
+    # RegistrationPolicy refuses a concert that is cancelled or has started. Both are public
+    # knowledge, so the visitor learns the reason. A draft keeps the generic denial, which does
+    # not reveal that it exists.
+    def deny_access
+      return super if @concert.nil? || @concert.draft?
+
+      reason = @concert.cancelled? ? :cancelled : :started
+      target = policy(@concert).show? ? @concert : root_url
+      redirect_to target, alert: t("registrations.closed.#{reason}")
+    end
 end

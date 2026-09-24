@@ -40,22 +40,56 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
                  flash[:alert]
   end
 
-  test "a draft, a cancelled and a started concert are denied" do
-    closed = [
-      Concert.create!(concert_attributes),
-      Concert.create!(published_concert_attributes(status: :cancelled)),
-      Concert.create!(published_concert_attributes(starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
-    ]
+  test "a draft is denied without revealing that it exists" do
+    draft = Concert.create!(concert_attributes)
     sign_in_as users(:one)
 
-    closed.each do |concert|
-      assert_no_difference -> { Registration.count } do
-        post concert_registration_path(concert)
-      end
-
-      assert_redirected_to root_url
-      assert_equal I18n.t("authorization.denied"), flash[:alert]
+    assert_no_difference -> { Registration.count } do
+      post concert_registration_path(draft)
     end
+
+    assert_redirected_to root_url
+    assert_equal I18n.t("authorization.denied"), flash[:alert]
+  end
+
+  test "a cancelled concert is rejected with its reason" do
+    cancelled = Concert.create!(published_concert_attributes(status: :cancelled))
+    sign_in_as users(:one)
+
+    assert_no_difference -> { Registration.count } do
+      post concert_registration_path(cancelled)
+    end
+
+    assert_redirected_to concert_url(cancelled)
+    assert_equal "Dieses Konzert wurde abgesagt.", flash[:alert]
+  end
+
+  test "a started concert is rejected with its reason" do
+    started = Concert.create!(published_concert_attributes(starts_at: 1.hour.ago, ends_at: 1.hour.from_now))
+    sign_in_as users(:one)
+
+    assert_no_difference -> { Registration.count } do
+      post concert_registration_path(started)
+    end
+
+    # The concert page is closed to someone without a registration, so the reason is shown on
+    # the start page instead.
+    assert_redirected_to root_url
+    assert_equal "Dieses Konzert hat bereits begonnen.", flash[:alert]
+  end
+
+  test "a registration for a started concert cannot be withdrawn and says why" do
+    started = Concert.create!(published_concert_attributes)
+    started.register(users(:one))
+    started.update_columns(starts_at: 1.hour.ago, ends_at: 1.hour.from_now)
+    sign_in_as users(:one)
+
+    assert_no_difference -> { Registration.count } do
+      delete concert_registration_path(started)
+    end
+
+    assert_redirected_to concert_url(started)
+    assert_equal "Dieses Konzert hat bereits begonnen.", flash[:alert]
   end
 
   test "a participant withdraws their own registration and may register again" do

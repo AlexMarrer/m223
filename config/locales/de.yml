@@ -217,6 +217,9 @@ de:
       created: "Du bist für %{title} angemeldet."
     destroy:
       destroyed: "Deine Anmeldung für %{title} wurde storniert."
+    closed:
+      cancelled: "Dieses Konzert wurde abgesagt."
+      started: "Dieses Konzert hat bereits begonnen."
 
   sessions:
     new:

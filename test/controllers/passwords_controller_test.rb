@@ -53,9 +53,27 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert @user.reload.authenticate(CURRENT)
   end
 
-  test "update rejects a missing current password" do
+  test "update rejects a blank current password" do
     patch password_path, params: {
       user: { password_challenge: "", password: NEW, password_confirmation: NEW }
+    }
+
+    assert_response :unprocessable_content
+    assert @user.reload.authenticate(CURRENT)
+  end
+
+  test "update rejects a request without the current password field" do
+    patch password_path, params: {
+      user: { password: NEW, password_confirmation: NEW }
+    }
+
+    assert_response :unprocessable_content
+    assert @user.reload.authenticate(CURRENT)
+  end
+
+  test "update rejects a nil current password" do
+    patch password_path, params: {
+      user: { password_challenge: nil, password: NEW, password_confirmation: NEW }
     }
 
     assert_response :unprocessable_content

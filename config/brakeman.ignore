@@ -1,0 +1,12 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "fingerprint": "ecf7ddee053a1ef5cac7892d44f76c2b007800ba8e2e093abfc90e837f0cebf6",
+      "file": "app/views/concerts/show.html.erb",
+      "line": 42,
+      "note": "Concert validates playlist_url against \\Ahttps?://\\S+\\z, so javascript: and data: URLs cannot be stored."
+    }
+  ],
+  "brakeman_version": "8.0.6"
+}

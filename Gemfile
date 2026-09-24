@@ -23,7 +23,9 @@ gem "bcrypt", "~> 3.1.7"
 # Server-side authorization policies [https://github.com/varvet/pundit]
 gem "pundit"
 
-gem "json", "2.11.2"
+# json 3 drops the positional options argument of JSON.parse that Rails still passes when reading
+# signed messages. 2.19.9 is the first release without CVE-2026-54696.
+gem "json", "~> 2.19", ">= 2.19.9"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]

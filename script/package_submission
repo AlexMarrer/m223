@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Builds the submission package in tmp/abgabe/.
+#
+#   script/package_submission [DOKUMENTATION.pdf] [PRAESENTATION.pdf]
+#
+# The code ZIP holds the working tree as git sees it, plus docs/. docs/ is ignored by git, so a
+# plain `git archive` would leave it out. The submission ZIP is only built when both PDFs exist.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+out=tmp/abgabe
+stage="$out/eventdesk"
+rm -rf "$out"
+mkdir -p "$stage"
+
+if [ ! -d docs ]; then
+  echo "docs/ fehlt. Das Code-ZIP wäre unvollständig." >&2
+  exit 1
+fi
+
+# Tracked and untracked files that git does not ignore. Deleted files are skipped.
+git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d "" file; do
+  [ -f "$file" ] && cp --parents "$file" "$stage/"
+done
+cp -r docs "$stage/"
+
+(cd "$out" && zip -qr eventdesk-code.zip eventdesk)
+rm -rf "$stage"
+
+echo "Code-ZIP: $out/eventdesk-code.zip"
+unzip -l "$out/eventdesk-code.zip" | grep -E " eventdesk/(README\.md|docs/.*\.(png|jpe?g|svg|pdf))$" || true
+echo "Tests: $(unzip -l "$out/eventdesk-code.zip" | grep -c ' eventdesk/test/.*_test\.rb$') Dateien"
+
+missing=()
+for pdf in "${1:-}" "${2:-}"; do
+  if [ -z "$pdf" ] || [ ! -f "$pdf" ]; then
+    missing+=("${pdf:-(nicht angegeben)}")
+  fi
+done
+
+if [ ${#missing[@]} -gt 0 ]; then
+  echo
+  echo "Abgabe-ZIP nicht erstellt. Es fehlen die Dokumentation und/oder die Präsentation als PDF:"
+  printf '  - %s\n' "${missing[@]}"
+  exit 1
+fi
+
+cp "$1" "$2" "$out/"
+(cd "$out" && zip -q eventdesk-abgabe.zip eventdesk-code.zip "$(basename "$1")" "$(basename "$2")")
+echo
+echo "Abgabe-ZIP: $out/eventdesk-abgabe.zip"
+unzip -l "$out/eventdesk-abgabe.zip"
