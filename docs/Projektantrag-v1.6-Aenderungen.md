@@ -1,6 +1,6 @@
 # Projektantrag EventDesk — Änderungen für Version 1.6
 
-Grundlage: `Projektantrag_EventDesk_1-5-1.pdf` (Version 1.5, Status „Zur Beurteilung", 18.09.2026).
+Grundlage: `Projektantrag_EventDesk_1-5.pdf` (Version 1.5, Status „Zur Beurteilung", 18.09.2026).
 
 Diese Liste ist im Word-Dokument abzuarbeiten. Danach neu als PDF exportieren.
 Die Änderungen sind bewusst dokumentiert, weil Bewertungskriterium 3 verlangt, dass die
